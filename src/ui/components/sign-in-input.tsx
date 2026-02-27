@@ -27,7 +27,7 @@ const InputIcon = (props: InputIconProps) => {
       </span>
       {props.inputType === 'password' && (
         <span
-          className="absolute top-3 right-4 text-neutral-400 cursor-pointer"
+          className="absolute top-3 right-4 cursor-pointer text-neutral-400"
           onClick={props.onTogglePassword}
         >
           {props.tmpType === 'password' ? (
@@ -59,7 +59,11 @@ export const SignInInput = (props: InputWithLabelProps) => {
           tmpType={togglePassword}
           onTogglePassword={handleTogglePassword}
         />
-        <Input className="h-10.5 pl-12" {...props} type={togglePassword} />
+        <Input
+          className="h-10.5 rounded-b-md border-3 border-blue-500 pl-12"
+          {...props}
+          type={togglePassword}
+        />
       </div>
     </div>
   );

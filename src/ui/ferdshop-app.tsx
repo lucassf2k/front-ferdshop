@@ -1,5 +1,5 @@
-import { SignInPage } from './pages/sign-in';
+import { SignUpPage } from './pages/sign-up';
 
 export function FerdShopApp() {
-  return <SignInPage />;
+  return <SignUpPage />;
 }

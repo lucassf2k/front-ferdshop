@@ -1,6 +1,6 @@
-import logoImage from '../assets/logo.png';
-import { SignInInput } from '../components/sign-in-input';
-import { Button } from '../components/ui/button';
+import logoImage from '@/ui/assets/logo.png';
+import { SignInInput } from '@/ui/components/sign-in-input';
+import { Button } from '@/ui/components/ui/button';
 
 export const SignInPage = () => {
   return (
@@ -15,6 +15,9 @@ export const SignInPage = () => {
       <section className="flex w-full items-center justify-center">
         <div className="w-full max-w-170 max-[1120px]:p-8">
           <form>
+            <h2 className="mb-4 text-2xl font-bold">
+              Preencha com os seus dados
+            </h2>
             <div className="flex flex-col gap-4">
               <SignInInput
                 label="Email"
