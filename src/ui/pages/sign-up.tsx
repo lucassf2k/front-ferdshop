@@ -1,7 +1,8 @@
 import logoImage from '@/ui/assets/logo.png';
 import { Button } from '@/ui/components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
+import { Input } from '@/ui/components/ui/input';
+import { Label } from '@/ui/components/ui/label';
+import { Link } from 'react-router';
 
 interface BaseInputProps extends React.ComponentProps<'input'> {
   label: string;
@@ -60,7 +61,7 @@ export const SignUpPage = () => {
               <div className="mt-4 w-full gap-2">
                 <div className="flex w-full justify-center">
                   <div className="flex w-70 items-center justify-around text-[14px] text-neutral-500">
-                    <p>Já tenho uma conta</p>
+                    <Link to="/">Já tenho uma conta</Link>
                   </div>
                 </div>
 

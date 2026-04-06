@@ -1,6 +1,7 @@
-import logoImage from '@/ui/assets/logo.png';
+import { Link } from 'react-router';
 import { SignInInput } from '@/ui/components/sign-in-input';
 import { Button } from '@/ui/components/ui/button';
+import logoImage from '@/ui/assets/logo.png';
 
 export const SignInPage = () => {
   return (
@@ -36,7 +37,7 @@ export const SignInPage = () => {
                   <div className="flex w-70 items-center justify-around text-[14px] text-neutral-500">
                     <p className="">Esqueci minha senha</p>
                     <p>|</p>
-                    <p>Cadastrar nova conta</p>
+                    <Link to="/sign-up">Cadastrar nova conta</Link>
                   </div>
                 </div>
 
