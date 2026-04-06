@@ -1,5 +1,5 @@
-import { SignUpPage } from './pages/sign-up';
+import { Router } from '@/router';
 
 export function FerdShopApp() {
-  return <SignUpPage />;
+  return <Router />;
 }
