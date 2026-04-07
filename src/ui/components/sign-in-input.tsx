@@ -1,10 +1,12 @@
-import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
-import { Input } from './ui/input';
-import { Label } from './ui/label';
 import { useState, type HTMLInputTypeAttribute } from 'react';
+import { Eye, EyeOff, Lock, Mail } from 'lucide-react';
+import { Input } from '@/ui/components/ui/input';
+import { Label } from '@/ui/components/ui/label';
+import { InputError } from '@/ui/components/form/input';
 
 interface InputWithLabelProps extends React.ComponentProps<'input'> {
   label: string;
+  error?: string;
 }
 
 type InputIconProps = {
@@ -60,10 +62,11 @@ export const SignInInput = (props: InputWithLabelProps) => {
           onTogglePassword={handleTogglePassword}
         />
         <Input
-          className="h-10.5 rounded-b-md border-3 border-blue-500 pl-12"
+          className="mb-1 h-10.5 rounded-b-md border-3 border-blue-500 pl-12"
           {...props}
           type={togglePassword}
         />
+        {props.error && <InputError message={props.error} />}
       </div>
     </div>
   );
