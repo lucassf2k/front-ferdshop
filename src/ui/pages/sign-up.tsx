@@ -1,54 +1,11 @@
 import { Link } from 'react-router';
-import { useForm, type SubmitHandler } from 'react-hook-form';
-import { Button } from '@/ui/components/ui/button';
-import { Input } from '@/ui/components/ui/input';
-import { Label } from '@/ui/components/ui/label';
+import { useSignUp } from '@/hooks/use-sign-up';
 import logoImage from '@/ui/assets/logo.png';
-import { zodResolver } from '@hookform/resolvers/zod';
-import z from 'zod';
-
-interface BaseInputProps extends React.ComponentProps<'input'> {
-  label: string;
-}
-
-const BaseInput = (props: BaseInputProps) => {
-  return (
-    <div className="flex flex-col gap-2">
-      <Label className="text-[16px] font-bold">{props.label}</Label>
-      <Input
-        className="h-10.5 rounded-b-md border-3 border-blue-500"
-        {...props}
-      />
-    </div>
-  );
-};
-
-const schema = z
-  .object({
-    name: z.string().min(1, 'O nome é obrigatório'),
-    email: z.email('Email inválido'),
-    password: z.string().min(6, 'A senha deve conter pelo menos 6 caracteres'),
-    confirmPassword: z
-      .string()
-      .min(6, 'A confirmação de senha deve conter pelo menos 6 caracteres'),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: 'As senhas não coincidem',
-  });
-type SchemaType = z.infer<typeof schema>;
+import { BaseInput } from '@/ui/components/form/input';
+import { Button } from '@/ui/components/ui/button';
 
 export const SignUpPage = () => {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-  });
-
-  const handleSignUp: SubmitHandler<SchemaType> = (data) => {
-    console.log(data);
-  };
+  const { signUpForm, handleSignUp } = useSignUp();
 
   return (
     <div className="grid h-screen w-screen grid-cols-[1fr_2fr] max-md:flex max-md:items-center max-md:justify-center">
@@ -61,7 +18,7 @@ export const SignUpPage = () => {
       </section>
       <section className="flex w-full items-center justify-center">
         <div className="w-full max-w-170 max-[1120px]:p-8">
-          <form onSubmit={handleSubmit(handleSignUp)}>
+          <form onSubmit={signUpForm.handleSubmit(handleSignUp)}>
             <h2 className="mb-4 text-2xl font-bold">
               Preencha com os seus dados
             </h2>
@@ -70,25 +27,29 @@ export const SignUpPage = () => {
                 label="Nome"
                 type="text"
                 placeholder="Degite seu nome"
-                {...register('name')}
+                error={signUpForm.formState.errors.name?.message}
+                {...signUpForm.register('name')}
               />
               <BaseInput
                 label="Email"
                 type="email"
                 placeholder="Degite seu email"
-                {...register('email')}
+                error={signUpForm.formState.errors.email?.message}
+                {...signUpForm.register('email')}
               />
               <BaseInput
                 label="Senha"
                 type="password"
                 placeholder="Digite sua senha"
-                {...register('password')}
+                error={signUpForm.formState.errors.password?.message}
+                {...signUpForm.register('password')}
               />
               <BaseInput
                 label="Confirmar senha"
                 type="password"
                 placeholder="Confirme sua senha"
-                {...register('confirmPassword')}
+                error={signUpForm.formState.errors.confirmPassword?.message}
+                {...signUpForm.register('confirmPassword')}
               />
 
               <div className="mt-4 w-full gap-2">
