@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router/dom';
 import { SignInPage } from '@/ui/pages/sign-in';
 import { SignUpPage } from '@/ui/pages/sign-up';
 import { Toaster } from '@/ui/components/ui/sonner';
+import { HomePage } from '@/ui/pages/home';
 
 const RootLayout = () => {
   return (
@@ -18,7 +19,8 @@ const router = createBrowserRouter([
     path: '/',
     element: <RootLayout />,
     children: [
-      { index: true, element: <SignInPage /> },
+      { index: true, element: <HomePage /> },
+      { path: 'sign-in', element: <SignInPage /> },
       { path: 'sign-up', element: <SignUpPage /> },
       { path: 'test', element: <div>test</div> },
     ],
