@@ -1,4 +1,8 @@
-import type { SubmitHandler, UseFormHandleSubmit } from 'react-hook-form';
+import type {
+  FieldValues,
+  SubmitHandler,
+  UseFormHandleSubmit,
+} from 'react-hook-form';
 import { Button } from '@/ui/components/ui/button';
 import {
   Dialog,
@@ -11,32 +15,23 @@ import {
   DialogTrigger,
 } from '@/ui/components/ui/dialog';
 
-interface Props {
+interface Props<TFormValues extends FieldValues> {
   title: string;
   dialogTitle: string;
-  onSubmit: SubmitHandler<{
-    name: string;
-  }>;
-  onHandleSubmit: UseFormHandleSubmit<
-    {
-      name: string;
-    },
-    {
-      name: string;
-    }
-  >;
+  onSubmit: SubmitHandler<TFormValues>;
+  onHandleSubmit: UseFormHandleSubmit<TFormValues>;
   children: React.ReactNode;
   description?: string;
 }
 
-export const CustomRegisterDialog = ({
+export const CustomRegisterDialog = <TFormValues extends FieldValues>({
   title,
   dialogTitle,
   children,
   onSubmit,
   onHandleSubmit,
   description,
-}: Props) => {
+}: Props<TFormValues>) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -54,7 +49,7 @@ export const CustomRegisterDialog = ({
             {description || 'Preencha do campus'}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onHandleSubmit(onSubmit)}>
+        <form onSubmit={onHandleSubmit(onSubmit)} className="space-y-2">
           {children}
           <DialogFooter className="mt-4">
             <DialogClose asChild>
