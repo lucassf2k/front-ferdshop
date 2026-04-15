@@ -21,7 +21,7 @@ const isErr = <E, A>(
   return !result.ok;
 };
 
-export const Result = {
+export const result = {
   err,
   ok,
   match,
