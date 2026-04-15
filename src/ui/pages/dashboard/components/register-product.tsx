@@ -7,6 +7,7 @@ import type { Category } from '@/domain/entities/category';
 import { api } from '@/api';
 import { CustomSelect } from '@/ui/components/form/select';
 import { formatCurrencyService } from '@/services/format-currency';
+import type { Product } from '@/domain/entities/product';
 
 const registerProductSchema = z.object({
   name: z.string().min(1, { error: 'nome é obrigatório' }),
@@ -15,6 +16,13 @@ const registerProductSchema = z.object({
   description: z.string().optional(),
 });
 type RegisterProductSchema = z.infer<typeof registerProductSchema>;
+
+const DEFAULT_VALUES = {
+  name: '',
+  price: '',
+  categoryId: '',
+  description: '',
+} as const;
 
 export const RegisterProductDialog = () => {
   const {
@@ -25,18 +33,23 @@ export const RegisterProductDialog = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(registerProductSchema),
-    defaultValues: {
-      name: '',
-      price: '',
-      categoryId: '',
-      description: '',
-    },
+    defaultValues: DEFAULT_VALUES,
   });
 
   const handleSaveProduct: SubmitHandler<RegisterProductSchema> = async (
     data,
   ) => {
-    console.log(data);
+    const product: Product = {
+      name: data.name,
+      price: Number(data.price),
+      categoryId: data.categoryId,
+      description: data.description,
+    };
+    const response = await api.post('categories', {
+      body: JSON.stringify(product),
+    });
+    console.log(response);
+    reset();
   };
 
   return (
