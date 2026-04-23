@@ -6,6 +6,7 @@ import { SignUpPage } from '@/ui/pages/sign-up';
 import { RootLayout } from '@/ui/pages/layout';
 import { RooDashboardLayout } from '@/ui/pages/dashboard/layout';
 import { DashboradHomePage } from '@/ui/pages/dashboard/home';
+import { DashboardSignIn } from '@/ui/pages/dashboard/sign-in';
 
 const router = createBrowserRouter([
   {
@@ -15,17 +16,15 @@ const router = createBrowserRouter([
       { index: true, element: <HomePage /> },
       { path: 'sign-in', element: <SignInPage /> },
       { path: 'sign-up', element: <SignUpPage /> },
-      { path: 'test', element: <div>test</div> },
-      {
-        path: 'dashboard',
-        element: <RooDashboardLayout />,
-        children: [
-          {
-            index: true,
-            element: <DashboradHomePage />,
-          },
-        ],
-      },
+      { path: 'dashboard/sign-in', element: <DashboardSignIn /> },
+    ],
+  },
+  {
+    path: 'dashboard',
+    element: <RooDashboardLayout />,
+    children: [
+      { index: true, element: <DashboradHomePage /> },
+      { path: 'categories', element: <h1>Categorias</h1> },
     ],
   },
 ]);
