@@ -1,4 +1,27 @@
 import { MenuBar } from '@/ui/components/menu-bar';
+import {
+  FaAppleAlt,
+  FaGlassCheers,
+  FaPumpSoap,
+  FaThLarge,
+  FaWater,
+  FaWineBottle,
+} from 'react-icons/fa';
+import { BannerInfoOrganization } from './home/components/banner-info-organization';
+import { BestSellers } from './home/components/best-sellers';
+import { SearchBar } from './home/components/search-bar';
+import { ShoppingCart } from './home/components/shopping-cart';
+import { CategoriesSelector } from './home/components/categories-selector';
+
+const categories = [
+  { id: 'all', label: 'Todas', icon: FaThLarge },
+  { id: 'refill', label: 'Água c/ sais', icon: FaWater },
+  { id: 'mineral', label: 'Água mineral', icon: FaWater },
+  { id: 'bottle', label: 'Vasilhame 20L', icon: FaWineBottle },
+  { id: 'food', label: 'Alimentos', icon: FaAppleAlt },
+  { id: 'clean', label: 'Limpeza', icon: FaPumpSoap },
+  { id: 'drinks', label: 'Bebidas', icon: FaGlassCheers },
+];
 
 export const HomePage = () => {
   return (
@@ -11,13 +34,26 @@ export const HomePage = () => {
       </div>
 
       {/* CONTEÚDO PRINCIPAL */}
-      <div className="-mt-6 h-screen rounded-t-[1.8rem] bg-neutral-200 p-8">
-        <section className="-mt-28 mb-8 h-57.5 w-full rounded-4xl bg-white"></section>
+      <div className="-mt-6 flex h-screen w-full flex-col items-center rounded-t-[1.8rem] bg-neutral-200 p-8">
+        <div className="w-[90%]">
+          {/* BANNER INFO ORGANIZATION */}
+          <BannerInfoOrganization title="ferdshop" address="Mossoró, RN" />
 
-        <h1 className="mb-4 text-2xl font-bold">Bem-vindo ao Home Page</h1>
-        <p className="text-gray-700">
-          Este é o conteúdo principal da página inicial.
-        </p>
+          <div className="-mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(250px,30%)]">
+            <div className="flex flex-col gap-6">
+              {/* SEARCH BAR */}
+              <SearchBar />
+
+              {/* LISTAGEM DE CATEGORIAS */}
+              <CategoriesSelector />
+              {/* MAIS VENDIDOS */}
+              <BestSellers />
+            </div>
+
+            {/* CARRINHO */}
+            <ShoppingCart />
+          </div>
+        </div>
       </div>
     </>
   );
