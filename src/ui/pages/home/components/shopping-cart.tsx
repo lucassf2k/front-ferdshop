@@ -5,7 +5,7 @@ import { IoBag, IoBagOutline } from 'react-icons/io5';
 
 export const ShoppingCart = () => {
   return (
-    <div className="w-full rounded-2xl bg-white">
+    <div className="sticky top-24 max-h-115 max-w-104 rounded-2xl bg-white">
       <div className="py-5">
         <div className="flex items-center gap-5 px-8">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500">

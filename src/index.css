@@ -123,3 +123,18 @@
     @apply font-sans;
   }
 }
+
+/* Chrome, Safari e Edge */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Firefox */
+.scrollbar-none {
+  scrollbar-width: none;
+}
+
+/* IE (legado) */
+.scrollbar-none {
+  -ms-overflow-style: none;
+}

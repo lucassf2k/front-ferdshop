@@ -12,6 +12,7 @@ import { BestSellers } from './home/components/best-sellers';
 import { SearchBar } from './home/components/search-bar';
 import { ShoppingCart } from './home/components/shopping-cart';
 import { CategoriesSelector } from './home/components/categories-selector';
+import { ListProducts } from './home/components/list-products';
 
 const categories = [
   { id: 'all', label: 'Todas', icon: FaThLarge },
@@ -34,12 +35,12 @@ export const HomePage = () => {
       </div>
 
       {/* CONTEÚDO PRINCIPAL */}
-      <div className="-mt-6 flex h-screen w-full flex-col items-center rounded-t-[1.8rem] bg-neutral-200 p-8">
+      <div className="-mt-6 flex h-full w-full flex-col items-center rounded-t-[1.8rem] bg-neutral-200 p-8">
         <div className="w-[90%]">
           {/* BANNER INFO ORGANIZATION */}
           <BannerInfoOrganization title="ferdshop" address="Mossoró, RN" />
 
-          <div className="-mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(250px,30%)]">
+          <div className="relative -mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(250px,30%)]">
             <div className="flex flex-col gap-6">
               {/* SEARCH BAR */}
               <SearchBar />
@@ -48,6 +49,9 @@ export const HomePage = () => {
               <CategoriesSelector />
               {/* MAIS VENDIDOS */}
               <BestSellers />
+
+              {/* LISTAGEM DE PRODUTOS */}
+              <ListProducts />
             </div>
 
             {/* CARRINHO */}
