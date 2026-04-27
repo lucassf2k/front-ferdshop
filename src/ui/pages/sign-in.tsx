@@ -3,9 +3,11 @@ import { Link } from 'react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { SignInInput } from '@/ui/components/sign-in-input';
-import { Button } from '@/ui/components/ui/button';
 import logoImage from '@/ui/assets/logo.png';
 import { signInService } from '@/services/sign-in-service';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Spinner } from '../components/ui/spinner';
+import { Button } from '../components/base-button';
 
 const signInSchema = z.object({
   email: z.email({ error: 'Email inválido' }),
@@ -24,9 +26,12 @@ export const SignInPage = () => {
     resolver: zodResolver(signInSchema),
   });
 
+  const { mutateAsync, isPending, error } = useMutation({
+    mutationFn: signInService,
+  });
+
   const handleSignIn: SubmitHandler<SignInSchema> = async (data) => {
-    const signInOutput = await signInService(data);
-    console.log('Token recebido:', signInOutput.token);
+    mutateAsync(data);
   };
 
   return (
@@ -73,7 +78,11 @@ export const SignInPage = () => {
                   </div>
                 </div>
 
-                <Button className="mt-3 h-10.5 w-full cursor-pointer bg-blue-600 font-bold hover:bg-blue-500">
+                <Button
+                  isLoading={isPending}
+                  size="lg"
+                  className="mt-3 w-full cursor-pointer bg-blue-600 font-bold hover:bg-blue-500"
+                >
                   ENTRAR
                 </Button>
               </div>
