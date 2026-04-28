@@ -1,5 +1,6 @@
 import { FaFire } from 'react-icons/fa';
 import logoImage from '@/ui/assets/logo.png';
+import { BestSellersSkeleton } from '@/ui/components/skeletons/bes-sellers-skeleton';
 
 interface BestSellersItemProps {
   name: string;

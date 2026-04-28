@@ -1,28 +1,10 @@
 import { MenuBar } from '@/ui/components/menu-bar';
-import {
-  FaAppleAlt,
-  FaGlassCheers,
-  FaPumpSoap,
-  FaThLarge,
-  FaWater,
-  FaWineBottle,
-} from 'react-icons/fa';
 import { BannerInfoOrganization } from './home/components/banner-info-organization';
 import { BestSellers } from './home/components/best-sellers';
 import { SearchBar } from './home/components/search-bar';
 import { ShoppingCart } from './home/components/shopping-cart';
 import { CategoriesSelector } from './home/components/categories-selector';
 import { ListProducts } from './home/components/list-products';
-
-const categories = [
-  { id: 'all', label: 'Todas', icon: FaThLarge },
-  { id: 'refill', label: 'Água c/ sais', icon: FaWater },
-  { id: 'mineral', label: 'Água mineral', icon: FaWater },
-  { id: 'bottle', label: 'Vasilhame 20L', icon: FaWineBottle },
-  { id: 'food', label: 'Alimentos', icon: FaAppleAlt },
-  { id: 'clean', label: 'Limpeza', icon: FaPumpSoap },
-  { id: 'drinks', label: 'Bebidas', icon: FaGlassCheers },
-];
 
 export const HomePage = () => {
   return (

@@ -1,20 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useSearchParams } from 'react-router';
-import { useQuery } from '@tanstack/react-query';
-import { api } from '@/api';
+import { useEffect, useRef, useState } from 'react';
 import { ScrollButton } from './categories-selector/components/scroll-button';
 import { CategoriesSelectorContent } from './categories-selector/components/categories-selector-content';
 import { useFetchGetCategories } from '@/hooks/fetchs/use-fetch-get-categories';
 import { useCategoriesSelectorUrl } from '@/hooks/use-categories-selector-url';
-
-const CATEGORY_PARAM = 'category';
-
-type CategoryModel = {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
 
 interface Props {
   onChange?: (id: string) => void;

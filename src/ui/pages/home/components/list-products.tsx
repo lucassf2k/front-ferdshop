@@ -3,6 +3,9 @@ import { Button } from '@/ui/components/ui/button';
 import { BsCartPlus } from 'react-icons/bs';
 
 import logoImage from '@/ui/assets/logo.png';
+import { useQuery } from '@tanstack/react-query';
+import { api } from '@/api';
+import { ListProductItemSkeleton } from '@/ui/components/skeletons/list-products-skeleton';
 
 const ListProducItem = () => {
   return (
@@ -34,11 +37,19 @@ const ListProducItem = () => {
 };
 
 export const ListProducts = () => {
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['listProducts'],
+    queryFn: async () => {
+      return await api.get('products');
+    },
+  });
+
   return (
     <div className="h-full">
       <h2 className="text-lg font-bold uppercase">Todos os produtos</h2>
 
       <div className="mt-4 grid grid-cols-3 gap-4">
+        {true && <ListProductItemSkeleton />}
         <ListProducItem />
         <ListProducItem />
         <ListProducItem />
