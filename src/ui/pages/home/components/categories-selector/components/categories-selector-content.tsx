@@ -31,17 +31,24 @@ const buttonVariants = cva(
 );
 
 export const CategoriesSelectorContent = ({
-  error,
   isLoading,
   data,
+  error,
   scrollRef,
   activeCategoryId,
   onSelect,
 }: Props) => {
   if (error) {
     return (
-      <div className="flex h-10 items-center text-sm text-red-500">
-        Erro ao carregar categorias
+      <div className="flex gap-3 opacity-60">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div
+            key={i}
+            className="flex h-8 items-center rounded-full border border-gray-200 px-4 text-xs text-gray-400"
+          >
+            Indisponível
+          </div>
+        ))}
       </div>
     );
   }
