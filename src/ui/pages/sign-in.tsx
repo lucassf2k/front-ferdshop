@@ -1,21 +1,13 @@
-import z from 'zod';
 import { Link } from 'react-router';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { SignInInput } from '@/ui/components/sign-in-input';
 import logoImage from '@/ui/assets/logo.png';
-import { signInService } from '@/services/sign-in-service';
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Spinner } from '../components/ui/spinner';
 import { Button } from '../components/base-button';
-
-const signInSchema = z.object({
-  email: z.email({ error: 'Email inválido' }),
-  password: z
-    .string()
-    .min(8, { error: 'Senha deve ter pelo menos 8 caracteres' }),
-});
-type SignInSchema = z.infer<typeof signInSchema>;
+import { useMutationSignIn } from '@/hooks/fetchs/use-fetch-post-sign-in';
+import { signInSchema, type SignInSchema } from '@/schemas/sign-in';
+import { useEffect } from 'react';
+import { toast } from 'sonner';
 
 export const SignInPage = () => {
   const {
@@ -26,13 +18,21 @@ export const SignInPage = () => {
     resolver: zodResolver(signInSchema),
   });
 
-  const { mutateAsync, isPending, error } = useMutation({
-    mutationFn: signInService,
-  });
+  const { mutate, isPending, error } = useMutationSignIn();
 
   const handleSignIn: SubmitHandler<SignInSchema> = async (data) => {
-    mutateAsync(data);
+    mutate(data);
   };
+
+  useEffect(() => {
+    if (!error) return;
+    if (
+      error.type === 'ValidationError' ||
+      error.type === 'UnauthorizedError'
+    ) {
+      toast.warning('Email ou senha inválidos.');
+    }
+  }, [error]);
 
   return (
     <div className="grid h-screen w-screen grid-cols-[1fr_2fr] max-md:flex max-md:items-center max-md:justify-center">

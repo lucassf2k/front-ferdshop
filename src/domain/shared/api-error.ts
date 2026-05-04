@@ -4,7 +4,7 @@ export type AppError =
   | {
       type: 'ValidationError';
       message: string;
-      fieldErrors?: Record<string, string>;
+      issues?: string[];
     }
   | { type: 'NotFoundError'; message: string }
   | { type: 'UnknownError'; message: string };
@@ -24,4 +24,4 @@ const toUserMessage = (error: AppError): string => {
   }
 };
 
-export const aooError = { toUserMessage } as const;
+export const appError = { toUserMessage } as const;
