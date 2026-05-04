@@ -1,38 +1,19 @@
 import { Link } from 'react-router';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, type SubmitHandler } from 'react-hook-form';
 import { SignInInput } from '@/ui/components/sign-in-input';
 import logoImage from '@/ui/assets/logo.png';
-import { Button } from '../components/base-button';
-import { useMutationSignIn } from '@/hooks/fetchs/use-fetch-post-sign-in';
-import { signInSchema, type SignInSchema } from '@/schemas/sign-in';
-import { useEffect } from 'react';
-import { toast } from 'sonner';
+import { Button } from '@/ui/components/base-button';
+import { useSignInController } from '@/ui/controllers/use-sign-in-controller';
 
 export const SignInPage = () => {
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(signInSchema),
-  });
-
-  const { mutate, isPending, error } = useMutationSignIn();
-
-  const handleSignIn: SubmitHandler<SignInSchema> = async (data) => {
-    mutate(data);
-  };
-
-  useEffect(() => {
-    if (!error) return;
-    if (
-      error.type === 'ValidationError' ||
-      error.type === 'UnauthorizedError'
-    ) {
-      toast.warning('Email ou senha inválidos.');
-    }
-  }, [error]);
+    form: {
+      formState: { errors },
+      register,
+      handleSubmit,
+    },
+    isPending,
+    handleSignIn,
+  } = useSignInController();
 
   return (
     <div className="grid h-screen w-screen grid-cols-[1fr_2fr] max-md:flex max-md:items-center max-md:justify-center">
