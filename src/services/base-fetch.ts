@@ -20,31 +20,16 @@ export class BaseFetch {
     }
   }
 
-  private mapHttpError(status: number, body: any): AppError {
-    switch (status) {
-      case 401:
-        return {
-          type: 'UnauthorizedError',
-          message: 'Não autorizado',
-        };
-      case 404:
-        return {
-          type: 'NotFoundError',
-          message: 'Recurso não encontrado',
-        };
-      case 400:
-      case 422:
-        return {
-          type: 'ValidationError',
-          message: body?.message ?? 'Erro de validação',
-          issues: body?.issues,
-        };
-      default:
-        return {
-          type: 'UnknownError',
-          message: body?.message ?? 'Erro inesperado',
-        };
+  private mapHttpError(body: any): AppError {
+    if (body?.error?.code) {
+      return {
+        type: 'ApiError',
+        code: body.error.code,
+        message: body.error.message,
+      };
     }
+
+    return { type: 'UnknownError' };
   }
 
   async fetch<T>(
@@ -57,11 +42,11 @@ export class BaseFetch {
       const response = await fetch(fullUrl, options);
       const data = await this.safeParseJson<T>(response);
       if (!response.ok) {
-        return result.err(this.mapHttpError(response.status, data));
+        return result.err(this.mapHttpError(data));
       }
       return result.ok(data as T);
     } catch (err) {
-      return result.err({ type: 'NetworkError', message: 'Erro inesperado' });
+      return result.err({ type: 'NetworkError' });
     }
   }
 

@@ -1,3 +1,4 @@
+import { appError } from '@/domain/shared/api-error';
 import { useMutationSignIn } from '@/hooks/fetchs/use-fetch-post-sign-in';
 import { signInSchema, type SignInSchema } from '@/schemas/sign-in';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,12 +19,7 @@ export const useSignInController = () => {
 
   useEffect(() => {
     if (!error) return;
-    if (
-      error.type === 'ValidationError' ||
-      error.type === 'UnauthorizedError'
-    ) {
-      toast.warning('Email ou senha inválidos.');
-    }
+    toast.info(appError.toUserMessage(error));
   }, [error]);
 
   return { form, isPending, handleSignIn };

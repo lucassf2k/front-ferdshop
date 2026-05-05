@@ -1,26 +1,26 @@
+import { API_ERROR_MESSAGES, type ApiErrorCodeType } from './error-messages';
+
 export type AppError =
-  | { type: 'NetworkError'; message: string }
-  | { type: 'UnauthorizedError'; message: string }
-  | {
-      type: 'ValidationError';
-      message: string;
-      issues?: string[];
-    }
-  | { type: 'NotFoundError'; message: string }
-  | { type: 'UnknownError'; message: string };
+  | { type: 'NetworkError' }
+  | { type: 'UnknownError' }
+  | { type: 'ApiError'; code: ApiErrorCodeType; message: string };
+
+const DEFAULT_MESSAGE = 'Ocorreu um erro inesperado';
 
 const toUserMessage = (error: AppError): string => {
   switch (error.type) {
-    case 'NetworkError':
-      return 'Falha de conexão. Verifique sua internet.';
-    case 'UnauthorizedError':
-      return 'Sua sessão expirou. Faça login novamente.';
-    case 'ValidationError':
-      return error.message || 'Dados inválidos.';
-    case 'NotFoundError':
-      return 'Recurso não encontrado.';
-    default:
-      return 'Ocorreu um erro inesperado.';
+    case 'NetworkError': {
+      return 'Falha na conexão com o servidor. Verifique sua conexão e tente novamente.';
+    }
+    case 'ApiError': {
+      if (error.code === 'VALIDATION_ERROR') {
+        return error.message || API_ERROR_MESSAGES[error.code];
+      }
+      return API_ERROR_MESSAGES[error.code] ?? DEFAULT_MESSAGE;
+    }
+    default: {
+      return DEFAULT_MESSAGE;
+    }
   }
 };
 
