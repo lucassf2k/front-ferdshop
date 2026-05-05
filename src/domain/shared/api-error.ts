@@ -13,9 +13,6 @@ const toUserMessage = (error: AppError): string => {
       return 'Falha na conexão com o servidor. Verifique sua conexão e tente novamente.';
     }
     case 'ApiError': {
-      if (error.code === 'VALIDATION_ERROR') {
-        return error.message || API_ERROR_MESSAGES[error.code];
-      }
       return API_ERROR_MESSAGES[error.code] ?? DEFAULT_MESSAGE;
     }
     default: {

@@ -1,9 +1,13 @@
 import type { User } from '@/domain/entities/user';
+import type { Result } from '../shared/result';
+import type { AppError } from '../shared/api-error';
 
-type Input = User;
+export type SignUpInput = User;
 
-type Output = {
+export type SignUpOutput = {
   id: string;
 };
 
-export type SignUp = (input: Input) => Promise<Output>;
+export type SignUp = (
+  input: SignUpInput,
+) => Promise<Result<AppError, SignUpOutput>>;
