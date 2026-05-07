@@ -1,12 +1,17 @@
-type Input = {
+import type { AppError } from '../shared/api-error';
+import type { Result } from '../shared/result';
+
+export type CreateCategoryInput = {
   name: string;
 };
 
-type Output = {
+export type CreateCategoryOutput = {
   id: string;
   name: string;
   createdAt: Date;
   updatedAt: Date;
 };
 
-export type CreateCategory = (input: Input) => Promise<Output>;
+export type CreateCategory = (
+  input: CreateCategoryInput,
+) => Promise<Result<AppError, CreateCategoryOutput>>;

@@ -1,5 +1,7 @@
-import { api } from '@/api';
 import { useAppToastError } from '@/contexts/app-error-toast';
+import { appError, type AppError } from '@/domain/shared/api-error';
+import { unwrapResultOrThrow } from '@/helpers/unwrap-result-or-throw';
+import { ListCategoriesService } from '@/services/list-categories';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
@@ -15,15 +17,19 @@ export const useFetchGetCategories = () => {
 
   const query = useQuery({
     queryKey: ['categories'],
-    queryFn: async () => {
-      return await api.get<CategoryModel[]>('categories');
+    queryFn: async () => await unwrapResultOrThrow(ListCategoriesService()),
+    retry: (failureCount, error: AppError) => {
+      return error.type === 'NetworkError' && failureCount < 2;
     },
-    retry: false,
   });
 
   useEffect(() => {
-    if (query.error) {
-      showError('Houve um pequeno inconiência, tente novamente.');
+    if (!query.error?.type) return;
+    if (
+      query.error.type === 'NetworkError' ||
+      query.error.type === 'UnknownError'
+    ) {
+      showError(appError.toUserMessage(query.error));
     }
   }, [query.error]);
 

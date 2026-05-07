@@ -3,6 +3,9 @@ import type { Result } from '../shared/result';
 
 export type UndeleteCategoryOfIdInput = {
   id: string;
+  headers: {
+    bearer: string;
+  };
 };
 
 export type UndeleteCategoryOfIdOutput = {
@@ -12,6 +15,6 @@ export type UndeleteCategoryOfIdOutput = {
   updatedAt: Date;
 };
 
-export type SoftDeleteCategoryOfId = (
+export type UndeleteCategoryOfId = (
   input: UndeleteCategoryOfIdInput,
 ) => Promise<Result<AppError, UndeleteCategoryOfIdOutput>>;

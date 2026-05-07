@@ -9,8 +9,8 @@ export const useMutationSignUp = () => {
   const { showError } = useAppToastError();
 
   return useMutation({
-    mutationFn: (input: SignUpInput) =>
-      unwrapResultOrThrow(signUpService(input)),
+    mutationFn: async (input: SignUpInput) =>
+      await unwrapResultOrThrow(signUpService(input)),
     retry: (failureCount, error: AppError) => {
       return error.type === 'NetworkError' && failureCount < 2;
     },
