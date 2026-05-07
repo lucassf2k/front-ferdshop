@@ -6,8 +6,8 @@ export type ListCategoriesOutput = {
   name: string;
   createdAt: Date;
   updatedAt: Date;
-}[];
+};
 
 export type ListCategories = () => Promise<
-  Result<AppError, ListCategoriesOutput>
+  Result<AppError, ListCategoriesOutput[]>
 >;
