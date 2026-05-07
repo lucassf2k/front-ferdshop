@@ -5,8 +5,8 @@ import type {
 } from '@/domain/use-case/list-categories';
 import { unwrapResultBaseAPi } from '@/helpers/unwrap-result-base-api';
 
-export const ListCategoriesService: ListCategories = async () => {
+export const listCategoriesService: ListCategories = async () => {
   const response =
-    await api.get<BaseApiSchema<ListCategoriesOutput>>('categories');
+    await api.get<BaseApiSchema<ListCategoriesOutput[]>>('categories');
   return unwrapResultBaseAPi(response);
 };
