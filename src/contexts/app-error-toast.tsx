@@ -1,5 +1,11 @@
 import { AppErrorToast } from '@/ui/components/spp-error-modal';
-import { createContext, useContext, useState } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
 type ErrorState = {
   message?: string;
@@ -19,14 +25,19 @@ interface Props {
 export const AppErrorToastProvider = ({ children }: Props) => {
   const [error, setError] = useState<ErrorState | null>(null);
 
-  const showError = (message?: string) => {
+  const showError = useCallback((message?: string) => {
     setError({ message });
-  };
+  }, []);
 
-  const hideError = () => setError(null);
+  const hideError = useCallback(() => setError(null), []);
+
+  const value = useMemo(
+    () => ({ showError, hideError }),
+    [showError, hideError],
+  );
 
   return (
-    <Context.Provider value={{ showError, hideError }}>
+    <Context.Provider value={value}>
       {children}
 
       <AppErrorToast open={Boolean(error)} message={error?.message} />
