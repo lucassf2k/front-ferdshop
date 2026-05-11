@@ -1,12 +1,20 @@
 import { MenuBar } from '@/ui/components/menu-bar';
-import { BannerInfoOrganization } from './home/components/banner-info-organization';
-import { BestSellers } from './home/components/best-sellers';
-import { SearchBar } from './home/components/search-bar';
-import { ShoppingCart } from './home/components/shopping-cart';
-import { CategoriesSelector } from './home/components/categories-selector';
-import { ListProducts } from './home/components/list-products';
+import { BannerInfoOrganization } from '@/ui/pages/home/components/banner-info-organization';
+import { BestSellers } from '@/ui/pages/home/components/best-sellers';
+import { SearchBar } from '@/ui/pages/home/components/search-bar';
+import { ShoppingCart } from '@/ui/pages/home/components/shopping-cart';
+import { CategoriesSelector } from '@/ui/pages/home/components/categories-selector';
+import { ListProducts } from '@/ui/pages/home/components/list-products';
+import { useListProductsQuery } from '@/hooks/queries/use-list-products-query';
 
 export const HomePage = () => {
+  const { data, isLoading } = useListProductsQuery({
+    page: '1',
+    perPage: '10',
+  });
+
+  console.log(data);
+
   return (
     <>
       <MenuBar />
@@ -33,7 +41,7 @@ export const HomePage = () => {
               <BestSellers />
 
               {/* LISTAGEM DE PRODUTOS */}
-              <ListProducts />
+              <ListProducts products={data?.products} isLoading={isLoading} />
             </div>
 
             {/* CARRINHO */}
