@@ -1,4 +1,4 @@
-import { Minus, Plus, Trash2 } from 'lucide-react';
+import { Minus, Trash2 } from 'lucide-react';
 
 import { Button } from '@/ui/components/ui/button';
 import { formatCurrencyService } from '@/services/format-currency';

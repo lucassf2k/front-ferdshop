@@ -33,7 +33,7 @@ export const CartItem = ({ product }: Props) => {
       </div>
 
       {/* Content */}
-      <div className="flex flex-1 items-start justify-between">
+      <div className="flex flex-1 justify-between self-stretch">
         {/* Left side */}
         <div className="flex flex-col">
           <div className="flex items-start justify-between">
@@ -67,7 +67,7 @@ export const CartItem = ({ product }: Props) => {
         </div>
 
         {/* Right side */}
-        <div className="flex h-full flex-col items-end justify-between gap-10">
+        <div className="flex flex-col items-end">
           {/* Remove */}
           {isOnlyOne && (
             <Button
@@ -81,7 +81,7 @@ export const CartItem = ({ product }: Props) => {
           )}
 
           {/* Quantity controls */}
-          <div className="flex flex-col items-center gap-1">
+          <div className="mt-auto flex flex-col items-center gap-1">
             <span className="text-xs font-medium tracking-wide text-zinc-500 uppercase">
               Quantidade
             </span>
