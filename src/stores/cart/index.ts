@@ -33,8 +33,9 @@ export const useCart = create<CartStore>()(
           const product = state.cart.find((item) => item.id === productId);
           if (!product) return { cart: state.cart };
           const shouldRemoceProduct = product.quantity === 1;
-          if (shouldRemoceProduct)
+          if (shouldRemoceProduct) {
             return { cart: removeProductOfId(state.cart, productId) };
+          }
           return {
             cart: incremenOrDecrementProductQuantity(
               state.cart,
@@ -61,4 +62,8 @@ export const useCleanCart = () => useCart((state) => state.cleanCart);
 export const useCartTotalItems = () =>
   useCart((state) =>
     state.cart.reduce((acc, items) => acc + items.quantity, 0),
+  );
+export const useCartTotalPrice = () =>
+  useCart((state) =>
+    state.cart.reduce((acc, items) => acc + items.price * items.quantity, 0),
   );

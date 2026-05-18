@@ -7,15 +7,18 @@ import { RootLayout } from '@/ui/pages/layout';
 import { RooDashboardLayout } from '@/ui/pages/dashboard/layout';
 import { DashboradHomePage } from '@/ui/pages/dashboard/home';
 import { DashboardSignIn } from '@/ui/pages/dashboard/sign-in';
+import { CartPage } from '@/ui/pages/cart';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <RootLayout />,
+    errorElement: <h1>404</h1>,
     children: [
       { index: true, element: <HomePage /> },
       { path: 'sign-in', element: <SignInPage /> },
       { path: 'sign-up', element: <SignUpPage /> },
+      { path: 'cart', element: <CartPage /> },
       { path: 'dashboard/sign-in', element: <DashboardSignIn /> },
     ],
   },
