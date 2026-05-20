@@ -1,5 +1,5 @@
 import { appError } from '@/domain/shared/api-error';
-import { useMutationSignIn } from '@/hooks/fetchs/use-fetch-post-sign-in';
+import { useMutationSignIn } from '@/hooks/mutations/use-mutation-sign-in';
 import { signInSchema, type SignInSchema } from '@/schemas/sign-in';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
@@ -11,16 +11,20 @@ export const useSignInController = () => {
     resolver: zodResolver(signInSchema),
   });
 
-  const { mutate, isPending, error } = useMutationSignIn();
+  const { mutate, isPending, error, data } = useMutationSignIn();
 
   const handleSignIn: SubmitHandler<SignInSchema> = async (data) => {
     mutate(data);
   };
 
   useEffect(() => {
+    if (data?.code) {
+      toast.success('Logado com sucesso, bem vindo de volta!');
+      return;
+    }
     if (!error) return;
     toast.info(appError.toUserMessage(error));
-  }, [error]);
+  }, [error, data]);
 
-  return { form, isPending, handleSignIn };
+  return { data, form, isPending, handleSignIn };
 };

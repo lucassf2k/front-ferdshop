@@ -15,19 +15,23 @@ const router = createBrowserRouter([
     element: <RootLayout />,
     errorElement: <h1>404</h1>,
     children: [
-      { index: true, element: <HomePage /> },
-      { path: 'sign-in', element: <SignInPage /> },
-      { path: 'sign-up', element: <SignUpPage /> },
-      { path: 'cart', element: <CartPage /> },
+      {
+        path: '/',
+        element: <HomePage />,
+        children: [{ path: 'cart', element: <CartPage /> }],
+      },
+      { path: '/sign-in', element: <SignInPage /> },
+      { path: '/sign-up', element: <SignUpPage /> },
+      {
+        path: 'dashboard',
+        element: <RooDashboardLayout />,
+        children: [
+          { index: true, element: <DashboradHomePage /> },
+          { path: 'categories', element: <h1>Categorias</h1> },
+        ],
+      },
+
       { path: 'dashboard/sign-in', element: <DashboardSignIn /> },
-    ],
-  },
-  {
-    path: 'dashboard',
-    element: <RooDashboardLayout />,
-    children: [
-      { index: true, element: <DashboradHomePage /> },
-      { path: 'categories', element: <h1>Categorias</h1> },
     ],
   },
 ]);

@@ -7,7 +7,7 @@ export type SignInInput = {
 };
 
 export type SignInOutput = {
-  token: string;
+  code: string;
 };
 
 export type SignIn = (

@@ -39,7 +39,10 @@ export class BaseFetch {
     const fullUrl = this.buildUrl(url);
 
     try {
-      const response = await fetch(fullUrl, options);
+      const response = await fetch(fullUrl, {
+        credentials: 'include',
+        ...options,
+      });
       const data = await this.safeParseJson<T>(response);
       if (!response.ok) {
         return result.err(this.mapHttpError(data));

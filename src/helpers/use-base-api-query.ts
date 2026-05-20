@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import { useAppToastError } from '@/contexts/app-error-toast';
 import { appError, type AppError } from '@/domain/shared/api-error';
+import { toast } from 'sonner';
 
 type Service<T> = () => Promise<T>;
 type UseBaseQueryParams<T> = {
@@ -39,15 +40,21 @@ export const useBaseApiQuery = <T>({
     ...options,
   });
 
+  const errorType = query.error?.type;
+
   useEffect(() => {
-    if (!query.error?.type) return;
-    if (
-      query.error.type === 'NetworkError' ||
-      query.error.type === 'UnknownError'
-    ) {
-      showError(appError.toUserMessage(query.error));
+    if (!errorType || !query.error) return;
+    const message = appError.toUserMessage(query.error);
+    switch (errorType) {
+      case 'ApiError':
+        toast.info(message);
+        break;
+      case 'NetworkError':
+      case 'UnknownError':
+        showError(message);
+        break;
     }
-  }, [query.error, showError]);
+  }, [errorType, query.error, showError]);
 
   return query;
 };
