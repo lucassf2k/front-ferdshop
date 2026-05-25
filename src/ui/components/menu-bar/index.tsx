@@ -30,7 +30,7 @@ export const MenuBar = () => {
         <MenuBarItem
           label="Carrinho"
           Icon={ShoppingCartIcon}
-          to="/cart"
+          to="/carrinho"
           info={totalItemsInCart}
         />
         <MenuBarItem label="Informações" Icon={InfoIcon} to="/info" />
