@@ -1,6 +1,6 @@
 import type { User } from '@/domain/entities/user';
 import { appError } from '@/domain/shared/api-error';
-import { useMutationSignUp } from '@/hooks/fetchs/use-mutation-sign-up';
+import { useMutationSignUp } from '@/hooks/mutations/use-mutation-sign-up';
 import { signUpSchema, type SignUpSchema } from '@/schemas/sign-up';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
