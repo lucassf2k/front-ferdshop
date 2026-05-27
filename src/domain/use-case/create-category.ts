@@ -1,16 +1,12 @@
-import type { AppError } from '../shared/api-error';
-import type { Result } from '../shared/result';
+import type { Result } from '@/domain/shared/result';
+import type { AppError } from '@/domain/shared/api-error';
+import type { CategoryModel } from '@/hooks/use-categories-selector-url';
 
 export type CreateCategoryInput = {
   name: string;
 };
 
-export type CreateCategoryOutput = {
-  id: string;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-};
+export type CreateCategoryOutput = CategoryModel;
 
 export type CreateCategory = (
   input: CreateCategoryInput,
