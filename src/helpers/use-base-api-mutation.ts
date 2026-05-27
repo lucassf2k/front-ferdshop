@@ -1,7 +1,7 @@
 import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
-
 import { useAppToastError } from '@/contexts/app-error-toast';
 import { appError, type AppError } from '@/domain/shared/api-error';
+import { toast } from 'sonner';
 
 type Service<TData, TVariables> = (variables: TVariables) => Promise<TData>;
 
@@ -43,8 +43,14 @@ export const useBaseApiMutation = <
     },
 
     onError: (error, variables, onMutateResult, context) => {
-      if (error.type === 'NetworkError' || error.type === 'UnknownError') {
-        showError(appError.toUserMessage(error));
+      switch (error.type) {
+        case 'ApiError':
+          toast.warning(appError.toUserMessage(error));
+          break;
+        case 'NetworkError':
+        case 'UnknownError':
+          showError(appError.toUserMessage(error));
+          break;
       }
 
       options?.onError?.(error, variables, onMutateResult, context);

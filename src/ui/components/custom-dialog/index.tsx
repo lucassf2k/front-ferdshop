@@ -3,7 +3,9 @@ import type {
   SubmitHandler,
   UseFormHandleSubmit,
 } from 'react-hook-form';
+
 import { Button } from '@/ui/components/ui/button';
+
 import {
   Dialog,
   DialogClose,
@@ -42,16 +44,25 @@ export const CustomRegisterDialog = <TFormValues extends FieldValues>({
           {dialogTitle}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-sm">
-        <DialogHeader>
+
+      <DialogContent className="flex max-h-[85vh] flex-col sm:max-w-lg">
+        <DialogHeader className="shrink-0">
           <DialogTitle className="text-2xl">{title}</DialogTitle>
+
           <DialogDescription>
-            {description || 'Preencha do campus'}
+            {description || 'Preencha os campos'}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={onHandleSubmit(onSubmit)} className="space-y-2">
-          {children}
-          <DialogFooter className="mt-4">
+
+        <form
+          onSubmit={onHandleSubmit(onSubmit)}
+          className="flex min-h-0 flex-1 flex-col"
+        >
+          <div className="scrollbar-none flex-1 overflow-y-auto pr-2">
+            <div className="space-y-4">{children}</div>
+          </div>
+
+          <DialogFooter className="mt-4 shrink-0 border-t pt-4">
             <DialogClose asChild>
               <Button
                 type="button"
@@ -60,6 +71,7 @@ export const CustomRegisterDialog = <TFormValues extends FieldValues>({
                 Cancelar
               </Button>
             </DialogClose>
+
             <Button
               type="submit"
               className="cursor-pointer bg-blue-500 hover:bg-blue-500/90"
