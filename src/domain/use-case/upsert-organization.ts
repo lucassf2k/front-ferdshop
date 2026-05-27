@@ -1,0 +1,20 @@
+import type { AppError } from '@/domain/shared/api-error';
+import type { Result } from '@/domain/shared/result';
+import type { OrganizationModel } from '@/domain/model/organization';
+
+export type UpsertOrganizationInput = {
+  name: string;
+  email: string;
+  phone: string;
+  addres: string;
+  latitude: number;
+  longitude: number;
+  city: string;
+  state: string;
+};
+
+export type UpsertOrganizationOutput = OrganizationModel;
+
+export type UpsertOrganization = (
+  data: UpsertOrganizationInput,
+) => Promise<Result<AppError, UpsertOrganizationOutput>>;
