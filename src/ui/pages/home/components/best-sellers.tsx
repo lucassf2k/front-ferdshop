@@ -2,7 +2,7 @@ import { FaFire } from 'react-icons/fa';
 import logoImage from '@/ui/assets/logo.png';
 import { BestSellersSkeleton } from '@/ui/components/skeletons/bes-sellers-skeleton';
 import { useListProductsBestSellersQuery } from '@/hooks/queries/use-list-products-best-sellers-query';
-import { formatCurrencyService } from '@/services/format-currency';
+import { currencyFormatter } from '@/services/format-currency';
 
 interface BestSellersItemProps {
   name: string;
@@ -68,7 +68,7 @@ const BestSellersItems = ({
         <p className="text-[14px] font-normal text-gray-500">{description}</p>
 
         <p className="flex w-full items-center justify-between font-bold text-green-600">
-          {formatCurrencyService.toReal(price)}
+          {currencyFormatter.toReal(price)}
           <span className={`text-[12px] ${currentStyle.text}`}>
             {sold} vendidos
           </span>

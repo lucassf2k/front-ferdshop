@@ -2,7 +2,7 @@ import { useState, type SyntheticEvent } from 'react';
 import { BsCartPlus } from 'react-icons/bs';
 import { FaStar } from 'react-icons/fa6';
 import { CiStar } from 'react-icons/ci';
-import { formatCurrencyService } from '@/services/format-currency';
+import { currencyFormatter } from '@/services/format-currency';
 import { Button } from '@/ui/components/base-button';
 import emptyProductImage from '@/ui/assets/empty-product.png';
 import type { ProductModel } from '@/domain/model/product';
@@ -53,7 +53,7 @@ export const ListProducItem = ({ product }: ListProductItemProps) => {
         />
         <div className="space-y-1 text-end">
           <p className="text-sm font-bold text-green-500">
-            {formatCurrencyService.toReal(product.price)}
+            {currencyFormatter.toReal(product.price)}
           </p>
           <span className="flex items-center gap-1">
             {renderReviewRating()}

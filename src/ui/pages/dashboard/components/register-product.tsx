@@ -3,16 +3,16 @@ import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CustomRegisterDialog } from '@/ui/components/custom-dialog';
 import { BaseInput } from '@/ui/components/form/input';
-import type { Category } from '@/domain/entities/category';
-import { api } from '@/api';
 import { CustomSelect } from '@/ui/components/form/select';
-import { formatCurrencyService } from '@/services/format-currency';
-import type { Product } from '@/domain/entities/product';
+import { currencyFormatter } from '@/services/format-currency';
+import { useCreateProductMutation } from '@/hooks/mutations/use-create-product-mutation';
+import type { CreateProductInput } from '@/domain/use-case/create-product';
 
 const registerProductSchema = z.object({
   name: z.string().min(1, { error: 'nome é obrigatório' }),
   price: z.string({ error: 'preço é obrigatório' }),
   categoryId: z.string({ error: 'categoria é obrigatório' }),
+  imageUrl: z.string({ error: 'imagem é obrigatória' }),
   description: z.string().optional(),
 });
 type RegisterProductSchema = z.infer<typeof registerProductSchema>;
@@ -21,6 +21,7 @@ const DEFAULT_VALUES = {
   name: '',
   price: '',
   categoryId: '',
+  imageUrl: '',
   description: '',
 } as const;
 
@@ -36,19 +37,17 @@ export const RegisterProductDialog = () => {
     defaultValues: DEFAULT_VALUES,
   });
 
-  const handleSaveProduct: SubmitHandler<RegisterProductSchema> = async (
-    data,
-  ) => {
-    const product: Product = {
+  const { mutate } = useCreateProductMutation();
+
+  const handleSaveProduct: SubmitHandler<RegisterProductSchema> = (data) => {
+    const product: CreateProductInput = {
       name: data.name,
       price: Number(data.price),
       categoryId: data.categoryId,
+      imageUrl: data.imageUrl,
       description: data.description,
     };
-    const response = await api.post('categories', {
-      body: JSON.stringify(product),
-    });
-    console.log(response);
+    mutate(product);
     reset();
   };
 
@@ -75,7 +74,7 @@ export const RegisterProductDialog = () => {
             error={errors.price?.message}
             value={field.value ?? ''}
             onChange={(e) =>
-              field.onChange(formatCurrencyService.toReal(e.target.value))
+              field.onChange(currencyFormatter.formatInput(e.target.value))
             }
           />
         )}

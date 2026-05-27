@@ -4,7 +4,7 @@ import { CiClock2 } from 'react-icons/ci';
 import { FaAngleRight } from 'react-icons/fa';
 import { IoBag, IoBagOutline } from 'react-icons/io5';
 import { ShoppingCartItem } from './shopping-cart-item';
-import { formatCurrencyService } from '@/services/format-currency';
+import { currencyFormatter } from '@/services/format-currency';
 
 export const ShoppingCart = () => {
   const cart = useCartItems();
@@ -55,7 +55,7 @@ export const ShoppingCart = () => {
           <div className="my-4 flex w-full items-center justify-between px-8">
             <p className="text-[16px] font-bold">Total</p>
             <p className="text-[16px] font-bold text-green-500">
-              {formatCurrencyService.toReal(totalPrice)}
+              {currencyFormatter.toReal(totalPrice)}
             </p>
           </div>
         )}

@@ -1,7 +1,7 @@
 import { Minus, Plus, X } from 'lucide-react';
 
 import { Button } from '@/ui/components/ui/button';
-import { formatCurrencyService } from '@/services/format-currency';
+import { currencyFormatter } from '@/services/format-currency';
 import type { CartProduct } from '@/stores/cart/cart-type';
 import { CiCircleInfo } from 'react-icons/ci';
 import { useAddProductToCart, useRemoveProductFromCart } from '@/stores/cart';
@@ -61,7 +61,7 @@ export const CartItem = ({ product }: Props) => {
             </span>
 
             <p className="text-2xl font-bold text-amber-500">
-              {formatCurrencyService.toReal(product.totalToPay)}
+              {currencyFormatter.toReal(product.totalToPay)}
             </p>
           </div>
         </div>

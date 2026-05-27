@@ -1,7 +1,7 @@
 import { Minus, Trash2 } from 'lucide-react';
 
 import { Button } from '@/ui/components/ui/button';
-import { formatCurrencyService } from '@/services/format-currency';
+import { currencyFormatter } from '@/services/format-currency';
 import type { CartProduct } from '@/stores/cart/cart-type';
 import { useRemoveProductFromCart } from '@/stores/cart';
 
@@ -31,7 +31,7 @@ export const ShoppingCartItem = ({ product }: Props) => {
             </h3>
 
             <p className="mt-1 text-xs text-zinc-500">
-              {formatCurrencyService.toReal(product.price)} cada
+              {currencyFormatter.toReal(product.price)} cada
             </p>
           </div>
 
@@ -44,7 +44,7 @@ export const ShoppingCartItem = ({ product }: Props) => {
             <div className="h-1 w-1 rounded-full bg-zinc-300" />
 
             <span className="text-sm font-bold text-zinc-800">
-              {formatCurrencyService.toReal(product.price * product.quantity)}
+              {currencyFormatter.toReal(product.price * product.quantity)}
             </span>
           </div>
         </div>
