@@ -46,9 +46,16 @@ export const useBaseApiQuery = <T>({
     if (!errorType || !query.error) return;
     const message = appError.toUserMessage(query.error);
     switch (errorType) {
-      case 'ApiError':
-        toast.info(message);
+      case 'ApiError': {
+        toast.info(message, { id: message });
+        if (
+          query.error.code === 'UNAUTHORIZED' ||
+          query.error.code === 'FORBIDDEN'
+        ) {
+          showError(message);
+        }
         break;
+      }
       case 'NetworkError':
       case 'UnknownError':
         showError(message);

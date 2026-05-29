@@ -1,3 +1,3 @@
 export const organizationKeys = {
-  all: ['categories'] as const,
+  all: ['organizations'] as const,
 };

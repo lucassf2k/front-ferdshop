@@ -3,7 +3,7 @@ import { unwrapResultOrThrow } from '@/helpers/unwrap-result-or-throw';
 import { useBaseApiMutation } from '@/helpers/use-base-api-mutation';
 import { upsertOrganizationService } from '@/services/upsert-organization';
 
-export const useOrganizationMutation = () => {
+export const useUpsertOrganizationMutation = () => {
   return useBaseApiMutation({
     service: (data: UpsertOrganizationInput) =>
       unwrapResultOrThrow(upsertOrganizationService(data)),
