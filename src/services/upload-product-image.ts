@@ -11,9 +11,6 @@ export const uploadProductImageService: UploadProductImage = async (data) => {
   const response = await api.post<BaseApiSchema<UploadProductImageOutput>>(
     'products/image',
     {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
       body: formData,
     },
   );

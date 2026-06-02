@@ -10,6 +10,10 @@ export const listProductsBestSellersService: ListProductsBestSellers = async ({
 }) => {
   const response = await api.get<
     BaseApiSchema<ListProductsBestSellersOutput[]>
-  >(`products/best-sellers?quantity=${quantity}`);
+  >(`products/best-sellers?quantity=${quantity}`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   return unwrapResultBaseAPi(response);
 };

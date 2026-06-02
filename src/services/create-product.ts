@@ -9,6 +9,9 @@ export const createProductService: CreateProduct = async (data) => {
   const response = await api.post<BaseApiSchema<CreateProductOutput>>(
     'products',
     {
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(data),
     },
   );

@@ -9,6 +9,9 @@ export const createCategoryService: CreateCategory = async (data) => {
   const response = await api.post<BaseApiSchema<CreateCategoryOutput>>(
     'categories',
     {
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(data),
     },
   );

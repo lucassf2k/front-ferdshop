@@ -8,6 +8,11 @@ import { unwrapResultBaseAPi } from '@/helpers/unwrap-result-base-api';
 export const getUserOfIdService: GetUserOfId = async ({ id }) => {
   const response = await api.get<BaseApiSchema<GetUserOfIdOutput>>(
     `users/${id}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
   );
   return unwrapResultBaseAPi(response);
 };

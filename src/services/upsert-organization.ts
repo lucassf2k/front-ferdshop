@@ -9,6 +9,9 @@ export const upsertOrganizationService: UpsertOrganization = async (data) => {
   const response = await api.post<BaseApiSchema<UpsertOrganizationOutput>>(
     'organizations',
     {
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify(data),
     },
   );

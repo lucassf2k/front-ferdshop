@@ -6,7 +6,13 @@ import type {
 import { unwrapResultBaseAPi } from '@/helpers/unwrap-result-base-api';
 
 export const listCategoriesService: ListCategories = async () => {
-  const response =
-    await api.get<BaseApiSchema<ListCategoriesOutput[]>>('categories');
+  const response = await api.get<BaseApiSchema<ListCategoriesOutput[]>>(
+    'categories',
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
   return unwrapResultBaseAPi(response);
 };

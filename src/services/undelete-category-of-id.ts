@@ -10,6 +10,11 @@ export const undeleteCategoryOfIdService: UndeleteCategoryOfId = async ({
 }) => {
   const response = await api.patch<BaseApiSchema<UndeleteCategoryOfIdOutput>>(
     `categories/${id}/restore`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
   );
   return unwrapResultBaseAPi(response);
 };

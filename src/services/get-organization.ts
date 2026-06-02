@@ -6,7 +6,13 @@ import type {
 import { unwrapResultBaseAPi } from '@/helpers/unwrap-result-base-api';
 
 export const getOrganizationService: GetOrganization = async () => {
-  const response =
-    await api.get<BaseApiSchema<GetOrganizationOutput>>('organizations');
+  const response = await api.get<BaseApiSchema<GetOrganizationOutput>>(
+    'organizations',
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
   return unwrapResultBaseAPi(response);
 };

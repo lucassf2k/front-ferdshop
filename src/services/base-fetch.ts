@@ -59,9 +59,6 @@ export class BaseFetch {
   ): Promise<Result<AppError, T>> {
     return await this.fetch<T>(url, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       ...options,
     });
   }
@@ -72,9 +69,6 @@ export class BaseFetch {
   ): Promise<Result<AppError, T>> {
     return await this.fetch<T>(url, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       ...options,
     });
   }
@@ -85,9 +79,6 @@ export class BaseFetch {
   ): Promise<Result<AppError, T>> {
     return await this.fetch(url, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       ...options,
     });
   }
@@ -98,9 +89,6 @@ export class BaseFetch {
   ): Promise<Result<AppError, T>> {
     return await this.fetch(url, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       ...options,
     });
   }
@@ -111,9 +99,6 @@ export class BaseFetch {
   ): Promise<Result<AppError, T>> {
     return await this.fetch(url, {
       method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      },
       ...options,
     });
   }

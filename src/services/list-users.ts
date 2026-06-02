@@ -5,6 +5,11 @@ import { unwrapResultBaseAPi } from '@/helpers/unwrap-result-base-api';
 export const listUsersService: ListUsers = async ({ page, perPage }) => {
   const response = await api.get<BaseApiSchema<ListUsersOutput>>(
     `users?page=${page}&pageSize=${perPage}`,
+    {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
   );
   return unwrapResultBaseAPi(response);
 };

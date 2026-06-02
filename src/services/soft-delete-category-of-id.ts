@@ -10,6 +10,10 @@ export const softDeleteCategoryOfIdService: SoftDeleteCategoryOfId = async ({
 }) => {
   const response = await api.delete<
     BaseApiSchema<SoftDeleteCategoryOfIdOutput>
-  >(`categories/${id}`);
+  >(`categories/${id}`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   return unwrapResultBaseAPi(response);
 };
