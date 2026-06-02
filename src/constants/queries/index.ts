@@ -1,7 +1,7 @@
 import { categoryKeys } from '@/constants/queries/categories';
 import { userKeys } from '@/constants/queries/users';
-import { productKeys } from './products';
-import { organizationKeys } from './organization';
+import { productKeys } from '@/constants/queries/products';
+import { organizationKeys } from '@/constants/queries/organization';
 
 export const queries = {
   categoryKeys,
