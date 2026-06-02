@@ -1,15 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { ScrollButton } from './categories-selector/components/scroll-button';
 import { CategoriesSelectorContent } from './categories-selector/components/categories-selector-content';
-import { useFetchGetCategories } from '@/hooks/fetchs/use-fetch-get-categories';
 import { useCategoriesSelectorUrl } from '@/hooks/use-categories-selector-url';
+import { useQueryListCategories } from '@/hooks/queries/use-fetch-get-categories';
 
 interface Props {
   onChange?: (id: string) => void;
 }
 
 export const CategoriesSelector = ({ onChange }: Props) => {
-  const { data, error, isLoading } = useFetchGetCategories();
+  const { data, error, isError, isLoading } = useQueryListCategories();
   const { activeCategoryId, setCategory } = useCategoriesSelectorUrl(data);
   const [scrollState, setScrollState] = useState({
     canScrollLeft: false,
@@ -73,7 +73,7 @@ export const CategoriesSelector = ({ onChange }: Props) => {
       <CategoriesSelectorContent
         data={data}
         isLoading={isLoading}
-        error={error}
+        error={isError}
         activeCategoryId={activeCategoryId}
         onSelect={setCategory}
         scrollRef={scrollRef}

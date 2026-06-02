@@ -5,7 +5,6 @@ import { CiCircleInfo } from 'react-icons/ci';
 import { CiStar } from 'react-icons/ci';
 import logoImage from '@/ui/assets/logo.png';
 import { StatusBadge } from './status-badge';
-import { BannerInfoOrganizationSkeleton } from '@/ui/components/skeletons/banner-info-organization-skeleton';
 
 interface Props {
   title: string;

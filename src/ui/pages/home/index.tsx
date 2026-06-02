@@ -1,4 +1,3 @@
-import { MenuBar } from '@/ui/components/menu-bar';
 import { BannerInfoOrganization } from '@/ui/pages/home/components/banner-info-organization';
 import { BestSellers } from '@/ui/pages/home/components/best-sellers';
 import { SearchBar } from '@/ui/pages/home/components/search-bar';
@@ -6,19 +5,40 @@ import { ShoppingCart } from '@/ui/pages/home/components/shopping-cart';
 import { CategoriesSelector } from '@/ui/pages/home/components/categories-selector';
 import { ListProducts } from '@/ui/pages/home/components/list-products';
 import { useListProductsQuery } from '@/hooks/queries/use-list-products-query';
+import { useSearchParams } from 'react-router';
+import { ProductsPagination } from './components/products-pagination';
+import { ProductPerPageSelect } from './components/product-per-page-select';
+import { AppLoading } from '@/ui/components/app-loading';
+
+const DEFAULT_PAGE = 1;
+const DEFAULT_PER_PAGE = 10;
 
 export const HomePage = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const page = Number(searchParams.get('page') ?? DEFAULT_PAGE);
+  const perPage = Number(searchParams.get('perPage') ?? DEFAULT_PER_PAGE);
+
   const { data, isLoading } = useListProductsQuery({
-    page: '1',
-    perPage: '10',
+    page: String(page),
+    perPage: String(perPage),
   });
 
   console.log(data);
 
+  const totalProducts = data?.total ?? 0;
+  const totalPages = Math.ceil(totalProducts / perPage);
+
+  const handlePageChange = (newPage: number) => {
+    setSearchParams((previousParams) => {
+      previousParams.set('page', String(newPage));
+      previousParams.set('perPage', String(perPage));
+      return previousParams;
+    });
+  };
+
   return (
     <>
-      <MenuBar />
-
       {/* IMAGE DE FUNDO */}
       <div className="h-80 w-full bg-red-500">
         <div className="pointer-events-none h-full w-full bg-linear-to-b from-black/0 via-black/40 to-black/90" />
@@ -30,7 +50,7 @@ export const HomePage = () => {
           {/* BANNER INFO ORGANIZATION */}
           <BannerInfoOrganization title="ferdshop" address="Mossoró, RN" />
 
-          <div className="relative -mt-4 grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(250px,30%)]">
+          <div className="relative -mt-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(250px,30%)]">
             <div className="flex flex-col gap-6">
               {/* SEARCH BAR */}
               <SearchBar />
@@ -41,7 +61,24 @@ export const HomePage = () => {
               <BestSellers />
 
               {/* LISTAGEM DE PRODUTOS */}
-              <ListProducts products={data?.products} isLoading={isLoading} />
+              <div className="space-y-3">
+                <ListProducts products={data?.products} isLoading={isLoading} />
+
+                <div className="flex w-full items-center justify-between">
+                  <ProductPerPageSelect
+                    value={page}
+                    onValueChange={(value) => {
+                      handlePageChange(1);
+                    }}
+                  />
+                  {/* PAGINAÇÃO */}
+                  <ProductsPagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                  />
+                </div>
+              </div>
             </div>
 
             {/* CARRINHO */}

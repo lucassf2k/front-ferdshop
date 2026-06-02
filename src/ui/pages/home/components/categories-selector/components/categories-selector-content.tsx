@@ -1,3 +1,4 @@
+import { ListCategoriesSkeleton } from '@/ui/components/skeletons/list-categories';
 import { Button } from '@/ui/components/ui/button';
 import { cva } from 'class-variance-authority';
 
@@ -10,7 +11,7 @@ type CategoryModel = {
 
 interface Props {
   data: CategoryModel[] | undefined;
-  error: Error | null;
+  error: boolean;
   isLoading: boolean;
   scrollRef: React.RefObject<HTMLDivElement | null>;
   activeCategoryId: string;
@@ -39,31 +40,15 @@ export const CategoriesSelectorContent = ({
   onSelect,
 }: Props) => {
   if (error) {
-    return (
-      <div className="flex gap-3 opacity-60">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div
-            key={i}
-            className="flex h-8 items-center rounded-full border border-gray-200 px-4 text-xs text-gray-400"
-          >
-            Indisponível
-          </div>
-        ))}
-      </div>
-    );
+    return <ListCategoriesSkeleton />;
   }
 
   if (isLoading) {
-    return (
-      <div className="flex gap-3">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <div
-            key={i}
-            className="h-8 w-20 animate-pulse rounded-full bg-white/80"
-          />
-        ))}
-      </div>
-    );
+    return <ListCategoriesSkeleton />;
+  }
+
+  if (data?.length === 0) {
+    return <p>Nenhuma categoria encontrada</p>;
   }
 
   return (
