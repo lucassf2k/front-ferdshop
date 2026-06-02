@@ -7,6 +7,7 @@ import {
 import { useAppToastError } from '@/contexts/app-error-toast';
 import { appError, type AppError } from '@/domain/shared/api-error';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router';
 
 type Service<T> = () => Promise<T>;
 type UseBaseQueryParams<T> = {
@@ -20,6 +21,7 @@ export const useBaseApiQuery = <T>({
   service,
   options,
 }: UseBaseQueryParams<T>) => {
+  const navigate = useNavigate();
   const { showError } = useAppToastError();
 
   const query = useQuery<T, AppError>({
@@ -52,7 +54,7 @@ export const useBaseApiQuery = <T>({
           query.error.code === 'UNAUTHORIZED' ||
           query.error.code === 'FORBIDDEN'
         ) {
-          showError(message);
+          navigate('/login');
         }
         break;
       }
