@@ -6,7 +6,7 @@ export type UpsertOrganizationInput = {
   name: string;
   email: string;
   phone: string;
-  addres: string;
+  address: string;
   latitude: number;
   longitude: number;
   city: string;

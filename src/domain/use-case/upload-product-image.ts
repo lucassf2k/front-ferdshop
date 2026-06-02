@@ -6,7 +6,7 @@ export type UploadProductImageInput = {
 };
 
 export type UploadProductImageOutput = {
-  code: string;
+  filename: string;
 };
 
 export type UploadProductImage = (
