@@ -1,5 +1,5 @@
 import { CreditCard } from 'lucide-react';
-import { formatCurrencyService } from '@/services/format-currency';
+import { currencyFormatter } from '@/services/format-currency';
 
 interface Props {
   total: number;
@@ -25,7 +25,7 @@ export const CartButton = ({ total }: Props) => {
       </div>
 
       <div className="rounded-full bg-white/20 px-5 py-2 text-lg font-bold">
-        {formatCurrencyService.toReal(total)}
+        {currencyFormatter.toReal(total)}
       </div>
     </button>
   );
