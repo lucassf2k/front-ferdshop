@@ -1,4 +1,5 @@
-import { CustomRegisterDialog } from '@/ui/components/custom-dialog';
+import { CustomRegisterDialogWrapper } from '@/ui/components/custom-dialog';
+import { DialogForm } from '@/ui/components/custom-dialog/dialog-form';
 import { BaseInput } from '@/ui/components/form/input';
 import { useRegisterCategoriesController } from '@/ui/controllers/use-register-categories-controller';
 
@@ -13,18 +14,18 @@ export const RegisterCategoriesDialog = () => {
   } = useRegisterCategoriesController();
 
   return (
-    <CustomRegisterDialog
+    <CustomRegisterDialogWrapper
       title="Criar categorias"
       dialogTitle="Categorias"
-      onHandleSubmit={handleSubmit}
-      onSubmit={handleSaveCategory}
     >
-      <BaseInput
-        label="Nome da categoria"
-        placeholder="Ex.: Eletrônicos"
-        error={errors.name?.message}
-        {...register('name')}
-      />
-    </CustomRegisterDialog>
+      <DialogForm onHandleSubmit={handleSubmit} onSubmit={handleSaveCategory}>
+        <BaseInput
+          label="Nome da categoria"
+          placeholder="Ex.: Eletrônicos"
+          error={errors.name?.message}
+          {...register('name')}
+        />
+      </DialogForm>
+    </CustomRegisterDialogWrapper>
   );
 };

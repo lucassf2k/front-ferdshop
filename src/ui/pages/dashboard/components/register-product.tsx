@@ -1,114 +1,132 @@
-import z from 'zod';
-import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CustomRegisterDialog } from '@/ui/components/custom-dialog';
+import { currencyFormatter } from '@/services/format-currency';
+import { CustomRegisterDialogWrapper } from '@/ui/components/custom-dialog';
+import { DialogForm } from '@/ui/components/custom-dialog/dialog-form';
 import { BaseInput } from '@/ui/components/form/input';
 import { CustomSelect } from '@/ui/components/form/select';
-import { currencyFormatter } from '@/services/format-currency';
-import { useCreateProductMutation } from '@/hooks/mutations/use-create-product-mutation';
-import type { CreateProductInput } from '@/domain/use-case/create-product';
-
-const registerProductSchema = z.object({
-  name: z.string().min(1, { error: 'nome é obrigatório' }),
-  price: z.string({ error: 'preço é obrigatório' }),
-  categoryId: z.string({ error: 'categoria é obrigatório' }),
-  imageUrl: z.string({ error: 'imagem é obrigatória' }),
-  description: z.string().optional(),
-});
-type RegisterProductSchema = z.infer<typeof registerProductSchema>;
-
-const DEFAULT_VALUES = {
-  name: '',
-  price: '',
-  categoryId: '',
-  imageUrl: '',
-  description: '',
-} as const;
+import { UploadProductImageForm } from '@/ui/components/upload-product-image';
+import { useRegisterProductController } from '@/ui/controllers/use-register-product-controller';
+import { Controller } from 'react-hook-form';
 
 export const RegisterProductDialog = () => {
   const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(registerProductSchema),
-    defaultValues: DEFAULT_VALUES,
-  });
-
-  const { mutate } = useCreateProductMutation();
-
-  const handleSaveProduct: SubmitHandler<RegisterProductSchema> = (data) => {
-    const product: CreateProductInput = {
-      name: data.name,
-      price: Number(data.price),
-      categoryId: data.categoryId,
-      imageUrl: data.imageUrl,
-      description: data.description,
-    };
-    mutate(product);
-    reset();
-  };
+    form: {
+      handleSubmit,
+      register,
+      formState: { errors },
+      control,
+    },
+    categoryData,
+    isUploadProductImagePending,
+    isUploadProductImageSuccess,
+    isUploadProductImageError,
+    isEnabledForm,
+    hasCategories,
+    isCreateProductPending,
+    handleUploadProductImage,
+    handleSaveProduct,
+  } = useRegisterProductController();
 
   return (
-    <CustomRegisterDialog
+    <CustomRegisterDialogWrapper
       title="Cadastrar produtos"
       dialogTitle="Produtos"
-      onHandleSubmit={handleSubmit}
-      onSubmit={handleSaveProduct}
     >
-      <BaseInput
-        label="Nome do produto"
-        placeholder="Ex.: Água"
-        error={errors.name?.message}
-        {...register('name')}
-      />
-      <Controller
-        control={control}
-        name="price"
-        render={({ field }) => (
-          <BaseInput
-            label="Preço do produto"
-            placeholder="Ex.: 12,50"
-            error={errors.price?.message}
-            value={field.value ?? ''}
-            onChange={(e) =>
-              field.onChange(currencyFormatter.formatInput(e.target.value))
-            }
-          />
-        )}
-      />
+      {categoryData?.length === 0 && (
+        <div className="flex items-center justify-center">
+          <h2 className="text-lg font-bold uppercase">
+            Nenhuma categoria cadastrada, cadastre uma primeiro
+          </h2>
+        </div>
+      )}
 
-      <Controller
-        control={control}
-        name="categoryId"
-        render={({ field }) => (
-          <CustomSelect
-            label="Categoria"
-            placehold="Selecione categoria"
-            value={field.value}
-            onValueChange={field.onChange}
-            error={errors.categoryId?.message}
-            items={[
-              {
-                groupLabel: 'Categorias',
-                selectItems: [
-                  { label: 'Bebidas', value: 'bebidas' },
-                  { label: 'Alimentos', value: 'alimentos' },
-                  { label: 'Limpeza', value: 'limpeza' },
-                ],
-              },
-            ]}
-          />
-        )}
-      />
-      <BaseInput
-        label="Descrição do produto"
-        placeholder="Ex.: Água 20L"
-        error={errors.description?.message}
-        {...register('description')}
-      />
-    </CustomRegisterDialog>
+      {hasCategories && (
+        <>
+          {!isEnabledForm && (
+            <UploadProductImageForm
+              onUpload={handleUploadProductImage}
+              isPending={isUploadProductImagePending}
+              isSuccess={isUploadProductImageSuccess}
+              isError={isUploadProductImageError}
+            />
+          )}
+
+          {!isEnabledForm && (
+            <div className="flex items-center justify-center">
+              <h2 className="text-md text-zinc-600">
+                Após salvar a imagem o formulário vai ser liberado!
+              </h2>
+            </div>
+          )}
+
+          {isEnabledForm && (
+            <DialogForm
+              onHandleSubmit={handleSubmit}
+              onSubmit={handleSaveProduct}
+              isLoading={isCreateProductPending}
+            >
+              <BaseInput
+                label="Nome do produto"
+                placeholder="Ex.: Água"
+                error={errors.name?.message}
+                {...register('name')}
+              />
+              <Controller
+                control={control}
+                name="price"
+                render={({ field }) => (
+                  <BaseInput
+                    label="Preço do produto"
+                    placeholder="Ex.: 12,50"
+                    error={errors.price?.message}
+                    value={field.value ?? ''}
+                    onChange={(e) =>
+                      field.onChange(
+                        currencyFormatter.formatInput(e.target.value),
+                      )
+                    }
+                  />
+                )}
+              />
+
+              <BaseInput
+                label="Quantidade no estoque"
+                placeholder="Ex.: 10"
+                error={errors.stock?.message}
+                {...register('stock')}
+              />
+
+              <Controller
+                control={control}
+                name="categoryId"
+                render={({ field }) => (
+                  <CustomSelect
+                    label="Categoria"
+                    placehold="Selecione categoria"
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    error={errors.categoryId?.message}
+                    items={[
+                      {
+                        groupLabel: 'Categorias',
+                        selectItems: categoryData.map((c) => ({
+                          label: c.name,
+                          value: c.id,
+                        })),
+                      },
+                    ]}
+                  />
+                )}
+              />
+              <BaseInput
+                label="Descrição do produto"
+                placeholder="Ex.: Água 20L"
+                error={errors.description?.message}
+                {...register('description')}
+              />
+            </DialogForm>
+          )}
+        </>
+      )}
+    </CustomRegisterDialogWrapper>
   );
 };
