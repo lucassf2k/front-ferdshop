@@ -12,6 +12,8 @@ interface ListProductItemProps {
   product: ProductModel;
 }
 
+const STATIC_URL = 'http://localhost:3001/files';
+
 export const ListProducItem = ({ product }: ListProductItemProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const addProduct = useAddProductToCart();
@@ -45,7 +47,7 @@ export const ListProducItem = ({ product }: ListProductItemProps) => {
     <div className="rounded-2xl bg-white p-4">
       <div className="flex justify-between">
         <img
-          src={product.imageUrl}
+          src={`${STATIC_URL}/${product.imageUrl}`}
           alt={product.name}
           loading="lazy"
           onError={fallbackImage()}
@@ -61,7 +63,7 @@ export const ListProducItem = ({ product }: ListProductItemProps) => {
         </div>
       </div>
 
-      <div>
+      <div className="mt-2">
         <p className="max-w-60 text-sm leading-7 font-bold">{product.name} </p>
         <p className="text-sm text-gray-500">{product.description}</p>
       </div>

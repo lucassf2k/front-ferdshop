@@ -5,13 +5,14 @@ import { CiCircleInfo } from 'react-icons/ci';
 import { CiStar } from 'react-icons/ci';
 import logoImage from '@/ui/assets/logo.png';
 import { StatusBadge } from './status-badge';
+import { useGetOrganizationQuery } from '@/hooks/queries/use-get-organization-query';
+import { BannerInfoOrganizationSkeleton } from '@/ui/components/skeletons/banner-info-organization-skeleton';
 
-interface Props {
-  title: string;
-  address: string;
-}
+export const BannerInfoOrganization = () => {
+  const { data: organization, isLoading } = useGetOrganizationQuery();
 
-export const BannerInfoOrganization = ({ title, address }: Props) => {
+  if (isLoading || !organization) return <BannerInfoOrganizationSkeleton />;
+
   return (
     <section className="-mt-28 mb-8 flex h-44 w-full items-center justify-between rounded-2xl bg-white p-6">
       <div className="flex items-center gap-6">
@@ -22,16 +23,18 @@ export const BannerInfoOrganization = ({ title, address }: Props) => {
             className="h-full w-full rounded-3xl"
           />
         </div>
-        <div className="">
+        <div>
           <div className="flex items-center gap-6">
-            <h1 className="text-[28px] font-bold uppercase">{title}</h1>
+            <h1 className="text-[28px] font-bold uppercase">
+              {organization.name}
+            </h1>
             <StatusBadge status="open" />
           </div>
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-1">
               <CiLocationOn className="h-5 w-5 text-amber-500" />
               <p className="text-[14px] leading-7 font-normal text-gray-500">
-                {address}
+                {organization.address}
               </p>
             </div>
             <div className="flex items-center gap-1">

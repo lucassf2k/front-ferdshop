@@ -19,7 +19,11 @@ export const ShoppingCartItem = ({ product }: Props) => {
     <div className="flex w-full items-center gap-4 rounded-2xl border bg-white p-4 shadow-sm transition-all hover:shadow-md">
       {/* Product image */}
       <div className="h-24 w-24 overflow-hidden rounded-xl bg-zinc-100">
-        <img src="" alt="" className="h-full w-full object-cover" />
+        <img
+          src={`http://localhost:3001/files/${product.imageUrl}`}
+          alt=""
+          className="h-full w-full object-cover"
+        />
       </div>
 
       {/* Content */}

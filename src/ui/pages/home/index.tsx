@@ -8,7 +8,6 @@ import { useListProductsQuery } from '@/hooks/queries/use-list-products-query';
 import { useSearchParams } from 'react-router';
 import { ProductsPagination } from './components/products-pagination';
 import { ProductPerPageSelect } from './components/product-per-page-select';
-import { AppLoading } from '@/ui/components/app-loading';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
@@ -48,7 +47,7 @@ export const HomePage = () => {
       <div className="-mt-6 flex h-full w-full flex-col items-center rounded-t-[1.8rem] bg-neutral-200 p-8">
         <div className="w-[90%]">
           {/* BANNER INFO ORGANIZATION */}
-          <BannerInfoOrganization title="ferdshop" address="Mossoró, RN" />
+          <BannerInfoOrganization />
 
           <div className="relative -mt-4 grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(250px,30%)]">
             <div className="flex flex-col gap-6">
@@ -65,12 +64,14 @@ export const HomePage = () => {
                 <ListProducts products={data?.products} isLoading={isLoading} />
 
                 <div className="flex w-full items-center justify-between">
-                  <ProductPerPageSelect
-                    value={page}
-                    onValueChange={(value) => {
-                      handlePageChange(1);
-                    }}
-                  />
+                  {totalPages > 1 && (
+                    <ProductPerPageSelect
+                      value={perPage}
+                      onValueChange={(value) => {
+                        handlePageChange(value);
+                      }}
+                    />
+                  )}
                   {/* PAGINAÇÃO */}
                   <ProductsPagination
                     currentPage={page}

@@ -8,7 +8,6 @@ import { useAddProductToCart, useRemoveProductFromCart } from '@/stores/cart';
 
 interface Props {
   product: CartProduct & {
-    image: string;
     totalToPay: number;
   };
 }
@@ -26,7 +25,7 @@ export const CartItem = ({ product }: Props) => {
       {/* Product image */}
       <div className="h-20 w-20 overflow-hidden rounded-xl bg-zinc-100">
         <img
-          src={product.image}
+          src={`http://localhost:3001/files/${product.imageUrl}`}
           alt={product.name}
           className="h-full w-full object-cover"
         />

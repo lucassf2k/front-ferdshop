@@ -22,7 +22,6 @@ export const CartPage = () => {
             {cart.map((p) => {
               const product = {
                 ...p,
-                image: 'asdads',
                 totalToPay,
               };
 
