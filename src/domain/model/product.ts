@@ -14,4 +14,5 @@ export type ProductModel = {
   updatedAt: Date;
   reviews: Review[];
   reviewCount: number;
+  categoryId: string;
 };

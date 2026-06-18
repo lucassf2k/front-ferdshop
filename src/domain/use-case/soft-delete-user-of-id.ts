@@ -1,5 +1,5 @@
-import type { AppError } from '../shared/api-error';
-import type { Result } from '../shared/result';
+import type { AppError } from '@/domain/shared/api-error';
+import type { Result } from '@/domain/shared/result';
 
 export type SoftDeleteUserOfIdInput = {
   id: string;
