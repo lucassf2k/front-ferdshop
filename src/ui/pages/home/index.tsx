@@ -6,8 +6,9 @@ import { CategoriesSelector } from '@/ui/pages/home/components/categories-select
 import { ListProducts } from '@/ui/pages/home/components/list-products';
 import { useListProductsQuery } from '@/hooks/queries/use-list-products-query';
 import { useSearchParams } from 'react-router';
-import { ProductsPagination } from './components/products-pagination';
+import { AppPagination } from '@/ui/components/app-pagination';
 import { ProductPerPageSelect } from './components/product-per-page-select';
+import { usePaginationMeta } from '@/hooks/use-pagination-meta';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
@@ -26,7 +27,11 @@ export const HomePage = () => {
   console.log(data);
 
   const totalProducts = data?.total ?? 0;
-  const totalPages = Math.ceil(totalProducts / perPage);
+  const { totalPages } = usePaginationMeta({
+    page,
+    perPage,
+    total: totalProducts,
+  });
 
   const handlePageChange = (newPage: number) => {
     setSearchParams((previousParams) => {
@@ -73,11 +78,7 @@ export const HomePage = () => {
                     />
                   )}
                   {/* PAGINAÇÃO */}
-                  <ProductsPagination
-                    currentPage={page}
-                    totalPages={totalPages}
-                    onPageChange={handlePageChange}
-                  />
+                  <AppPagination totalPages={totalPages} />
                 </div>
               </div>
             </div>
