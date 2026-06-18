@@ -11,7 +11,8 @@ import { BannerInfoOrganizationSkeleton } from '@/ui/components/skeletons/banner
 export const BannerInfoOrganization = () => {
   const { data: organization, isLoading } = useGetOrganizationQuery();
 
-  if (isLoading || !organization) return <BannerInfoOrganizationSkeleton />;
+  if (isLoading) return <BannerInfoOrganizationSkeleton />;
+  if (!organization) return null;
 
   return (
     <section className="-mt-28 mb-8 flex h-44 w-full items-center justify-between rounded-2xl bg-white p-6">

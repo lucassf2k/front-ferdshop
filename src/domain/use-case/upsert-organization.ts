@@ -11,6 +11,8 @@ export type UpsertOrganizationInput = {
   longitude: number;
   city: string;
   state: string;
+  whatsapp: string;
+  instagram: string;
 };
 
 export type UpsertOrganizationOutput = OrganizationModel;

@@ -53,8 +53,13 @@ export const useGetGeolocation = () => {
     );
   };
 
+  const resetGeolocation = () => {
+    setState(initialState);
+  };
+
   return {
     ...state,
     getCurrentLocation,
+    resetGeolocation,
   };
 };

@@ -3,13 +3,18 @@ import { useUpsertOrganizationMutation } from '@/hooks/mutations/use-upsert-orga
 import { useGetOrganizationQuery } from '@/hooks/queries/use-get-organization-query';
 import { useGetGeolocation } from '@/hooks/use-get-geolocation';
 import { Button } from '@/ui/components/base-button';
-import { CustomRegisterDialogWrapper } from '@/ui/components/custom-dialog';
+import { CustomActionDialogWrapper } from '@/ui/components/custom-dialog';
 import { DialogForm } from '@/ui/components/custom-dialog/dialog-form';
 import { BaseInput } from '@/ui/components/form/input';
 import { mask } from '@/ui/lib/mask';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
+import {
+  Controller,
+  useForm,
+  useWatch,
+  type SubmitHandler,
+} from 'react-hook-form';
 import z from 'zod';
 
 const zodRegisterOrganizationDialogSchema = z.object({
@@ -21,13 +26,17 @@ const zodRegisterOrganizationDialogSchema = z.object({
   longitude: z.number({ error: 'Longitude inválida' }),
   city: z.string().min(1, { error: 'Cidade é obrigatória' }),
   state: z.string().min(1, { error: 'Estado é obrigatório' }),
+  whatsapp: z.string().min(15, {
+    error: 'Whatsapp precisa ter 15 dígitos',
+  }),
+  instagram: z.string().min(1, {
+    error: 'Instagram é obrigatório',
+  }),
 });
 
-type ZodRegisterOrganizationDialogSchema = z.infer<
-  typeof zodRegisterOrganizationDialogSchema
->;
+type FormData = z.infer<typeof zodRegisterOrganizationDialogSchema>;
 
-const DEFAULT_VALUES: ZodRegisterOrganizationDialogSchema = {
+const DEFAULT_VALUES: FormData = {
   name: '',
   email: '',
   phone: '',
@@ -36,22 +45,22 @@ const DEFAULT_VALUES: ZodRegisterOrganizationDialogSchema = {
   longitude: 0,
   city: '',
   state: '',
+  whatsapp: '',
+  instagram: '',
 };
 
-const mapOrganizationToForm = (
-  organization: OrganizationModel,
-): ZodRegisterOrganizationDialogSchema => {
-  return {
-    name: organization.name,
-    email: organization.email,
-    phone: organization.phone,
-    address: organization.address,
-    latitude: organization.coordinates.latitude,
-    longitude: organization.coordinates.longitude,
-    city: organization.city,
-    state: organization.state,
-  };
-};
+const mapOrganizationToForm = (organization: OrganizationModel): FormData => ({
+  name: organization.name,
+  email: organization.email,
+  phone: organization.phone,
+  address: organization.address,
+  latitude: organization.coordinates.latitude,
+  longitude: organization.coordinates.longitude,
+  city: organization.city,
+  state: organization.state,
+  whatsapp: organization.whatsapp,
+  instagram: organization.instagram,
+});
 
 export const RegisterOrganizationDialog = () => {
   const { data: organizationData, isLoading: isOrganizationLoading } =
@@ -70,10 +79,9 @@ export const RegisterOrganizationDialog = () => {
     register,
     reset,
     setValue,
-    watch,
-    formState: { errors },
     control,
-  } = useForm<ZodRegisterOrganizationDialogSchema>({
+    formState: { errors },
+  } = useForm<FormData>({
     resolver: zodResolver(zodRegisterOrganizationDialogSchema),
     defaultValues: DEFAULT_VALUES,
   });
@@ -91,20 +99,27 @@ export const RegisterOrganizationDialog = () => {
   }, [organizationData, reset]);
 
   useEffect(() => {
-    if (
-      latitude !== null &&
-      latitude !== undefined &&
-      longitude !== null &&
-      longitude !== undefined
-    ) {
-      setValue('latitude', latitude);
-      setValue('longitude', longitude);
+    if (latitude == null || longitude == null) {
+      return;
     }
+
+    setValue('latitude', latitude, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+
+    setValue('longitude', longitude, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   }, [latitude, longitude, setValue]);
 
-  const handleUpsertOrganization: SubmitHandler<
-    ZodRegisterOrganizationDialogSchema
-  > = (data) => {
+  const [currentLatitude, currentLongitude] = useWatch({
+    control,
+    name: ['latitude', 'longitude'],
+  });
+
+  const handleUpsertOrganization: SubmitHandler<FormData> = (data) => {
     mutate({
       name: data.name,
       email: data.email,
@@ -112,19 +127,14 @@ export const RegisterOrganizationDialog = () => {
       address: data.address,
       city: data.city,
       state: data.state,
+      whatsapp: data.whatsapp,
+      instagram: data.instagram,
       latitude: data.latitude,
       longitude: data.longitude,
     });
   };
 
-  const title = organizationData
-    ? 'Atualizar organização'
-    : 'Criar organização';
-
-  const isLoading =
-    isOrganizationLoading || isUpsertPending || isGeolocationLoading;
-
-  const isEditing = !!organizationData;
+  const isEditing = Boolean(organizationData);
 
   const hasCurrentLocation =
     latitude !== null &&
@@ -134,23 +144,22 @@ export const RegisterOrganizationDialog = () => {
 
   const canShowForm = isEditing || hasCurrentLocation;
 
-  const currentLatitude = watch('latitude');
-  const currentLongitude = watch('longitude');
+  const isFormLoading = isOrganizationLoading || isUpsertPending;
 
   return (
-    <CustomRegisterDialogWrapper title={title} dialogTitle="Organização">
+    <CustomActionDialogWrapper
+      title={isEditing ? 'Atualizar organização' : 'Criar organização'}
+      dialogTitle="Organização"
+    >
       {!canShowForm ? (
         <div className="flex flex-col gap-4">
-          <button
+          <Button
             type="button"
             onClick={getCurrentLocation}
-            disabled={isGeolocationLoading}
-            className="bg-primary rounded-md px-4 py-2 text-white disabled:opacity-50"
+            isLoading={isGeolocationLoading}
           >
-            {isGeolocationLoading
-              ? 'Obtendo localização...'
-              : 'Obter localização'}
-          </button>
+            Obter localização
+          </Button>
 
           {geolocationError && (
             <p className="text-sm text-red-500">
@@ -162,11 +171,11 @@ export const RegisterOrganizationDialog = () => {
         <DialogForm
           onHandleSubmit={handleSubmit}
           onSubmit={handleUpsertOrganization}
-          isLoading={isLoading}
+          isLoading={isFormLoading}
         >
           <div className="space-y-3 rounded-md border p-4">
             <div>
-              <p className="font-medium">Localização atual</p>
+              <p className="font-medium">Coordenadas cadastradas</p>
 
               <p className="text-muted-foreground text-sm">
                 Latitude: {currentLatitude}
@@ -180,13 +189,10 @@ export const RegisterOrganizationDialog = () => {
             <Button
               type="button"
               onClick={getCurrentLocation}
-              disabled={isGeolocationLoading}
               isLoading={isGeolocationLoading}
-              className="cursor-pointer rounded-md bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50"
+              disabled={isGeolocationLoading}
             >
-              {isGeolocationLoading
-                ? 'Atualizando coordenadas...'
-                : 'Atualizar coordenadas'}
+              Atualizar coordenadas
             </Button>
 
             {geolocationError && (
@@ -200,7 +206,7 @@ export const RegisterOrganizationDialog = () => {
             label="Nome da organização"
             placeholder="Digite o nome da organização"
             error={errors.name?.message}
-            disabled={isLoading}
+            disabled={isFormLoading}
             {...register('name')}
           />
 
@@ -209,7 +215,7 @@ export const RegisterOrganizationDialog = () => {
             placeholder="Digite o email da organização"
             type="email"
             error={errors.email?.message}
-            disabled={isLoading}
+            disabled={isFormLoading}
             {...register('email')}
           />
 
@@ -219,9 +225,9 @@ export const RegisterOrganizationDialog = () => {
             render={({ field }) => (
               <BaseInput
                 label="Telefone da organização"
-                placeholder="Digite o telefone da organização"
+                placeholder="Ex.: (99) 99999-9999"
                 error={errors.phone?.message}
-                disabled={isLoading}
+                disabled={isFormLoading}
                 value={field.value ?? ''}
                 onChange={(e) => field.onChange(mask.phoneMask(e.target.value))}
               />
@@ -232,7 +238,7 @@ export const RegisterOrganizationDialog = () => {
             label="Endereço da organização"
             placeholder="Digite o endereço da organização"
             error={errors.address?.message}
-            disabled={isLoading}
+            disabled={isFormLoading}
             {...register('address')}
           />
 
@@ -240,7 +246,7 @@ export const RegisterOrganizationDialog = () => {
             label="Estado da organização"
             placeholder="Digite o estado da organização"
             error={errors.state?.message}
-            disabled={isLoading}
+            disabled={isFormLoading}
             {...register('state')}
           />
 
@@ -248,11 +254,34 @@ export const RegisterOrganizationDialog = () => {
             label="Cidade da organização"
             placeholder="Digite a cidade da organização"
             error={errors.city?.message}
-            disabled={isLoading}
+            disabled={isFormLoading}
             {...register('city')}
+          />
+
+          <Controller
+            control={control}
+            name="whatsapp"
+            render={({ field }) => (
+              <BaseInput
+                label="Whatsapp da organização"
+                placeholder="Ex.: (99) 99999-9999"
+                error={errors.whatsapp?.message}
+                disabled={isFormLoading}
+                value={field.value ?? ''}
+                onChange={(e) => field.onChange(mask.phoneMask(e.target.value))}
+              />
+            )}
+          />
+
+          <BaseInput
+            label="Instagram da organização"
+            placeholder="Digite o instagram da organização"
+            error={errors.instagram?.message}
+            disabled={isFormLoading}
+            {...register('instagram')}
           />
         </DialogForm>
       )}
-    </CustomRegisterDialogWrapper>
+    </CustomActionDialogWrapper>
   );
 };

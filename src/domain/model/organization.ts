@@ -12,6 +12,8 @@ export type OrganizationModel = {
   coordinates: Coordinates;
   city: string;
   state: string;
+  whatsapp: string;
+  instagram: string;
   createdAt: Date;
   updatedAt: Date;
 };
