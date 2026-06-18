@@ -1,35 +1,52 @@
 import { currencyFormatter } from '@/services/format-currency';
-import { CustomRegisterDialogWrapper } from '@/ui/components/custom-dialog';
+import { CustomActionDialogWrapper } from '@/ui/components/custom-dialog';
 import { DialogForm } from '@/ui/components/custom-dialog/dialog-form';
 import { BaseInput } from '@/ui/components/form/input';
 import { CustomSelect } from '@/ui/components/form/select';
-import { UploadProductImageForm } from '@/ui/components/upload-product-image';
+import { LoadFile } from '@/ui/components/load-file.tsx';
 import { useRegisterProductController } from '@/ui/controllers/use-register-product-controller';
+import { useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 export const RegisterProductDialog = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const {
     form: {
       handleSubmit,
       register,
+      reset,
       formState: { errors },
       control,
     },
     categoryData,
-    isUploadProductImagePending,
-    isUploadProductImageSuccess,
-    isUploadProductImageError,
-    isEnabledForm,
+    uploadedFile,
     hasCategories,
     isCreateProductPending,
-    handleUploadProductImage,
+    handleSetFile,
     handleSaveProduct,
   } = useRegisterProductController();
 
+  const handleSetUploadedFile = (file: File | null) => {
+    if (file === null) return;
+    handleSetFile(file);
+  };
+
+  const handleCloseDialog = (isOpen: boolean) => {
+    if (!isOpen) {
+      reset();
+      handleSetFile(null);
+    }
+    setIsOpen(isOpen);
+  };
+
   return (
-    <CustomRegisterDialogWrapper
+    <CustomActionDialogWrapper
       title="Cadastrar produtos"
-      dialogTitle="Produtos"
+      dialogTitle="Novo produto"
+      variant="create"
+      open={isOpen}
+      onOpenChange={handleCloseDialog}
     >
       {categoryData?.length === 0 && (
         <div className="flex items-center justify-center">
@@ -41,16 +58,9 @@ export const RegisterProductDialog = () => {
 
       {hasCategories && (
         <>
-          {!isEnabledForm && (
-            <UploadProductImageForm
-              onUpload={handleUploadProductImage}
-              isPending={isUploadProductImagePending}
-              isSuccess={isUploadProductImageSuccess}
-              isError={isUploadProductImageError}
-            />
-          )}
+          <LoadFile file={uploadedFile} onChange={handleSetUploadedFile} />
 
-          {!isEnabledForm && (
+          {!uploadedFile && (
             <div className="flex items-center justify-center">
               <h2 className="text-md text-zinc-600">
                 Após salvar a imagem o formulário vai ser liberado!
@@ -58,7 +68,7 @@ export const RegisterProductDialog = () => {
             </div>
           )}
 
-          {isEnabledForm && (
+          {uploadedFile && (
             <DialogForm
               onHandleSubmit={handleSubmit}
               onSubmit={handleSaveProduct}
@@ -127,6 +137,6 @@ export const RegisterProductDialog = () => {
           )}
         </>
       )}
-    </CustomRegisterDialogWrapper>
+    </CustomActionDialogWrapper>
   );
 };
