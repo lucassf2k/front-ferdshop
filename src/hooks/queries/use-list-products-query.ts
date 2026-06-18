@@ -10,7 +10,7 @@ type Input = {
 
 export const useListProductsQuery = (input: Input) => {
   return useBaseApiQuery({
-    queryKey: queries.productKeys.all,
+    queryKey: queries.productKeys.pagination(input.page, input.perPage),
     service: () => unwrapResultOrThrow(listProductsService(input)),
   });
 };
