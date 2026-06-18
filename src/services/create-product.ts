@@ -6,13 +6,17 @@ import type {
 import { unwrapResultBaseAPi } from '@/helpers/unwrap-result-base-api';
 
 export const createProductService: CreateProduct = async (data) => {
+  const formData = new FormData();
+  formData.append('file', data.file);
+  formData.append('name', data.name);
+  formData.append('price', String(data.price));
+  formData.append('stock', String(data.stock));
+  formData.append('categoryId', String(data.categoryId));
+  formData.append('description', String(data.description));
   const response = await api.post<BaseApiSchema<CreateProductOutput>>(
     'products',
     {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+      body: formData,
     },
   );
   return unwrapResultBaseAPi(response);
