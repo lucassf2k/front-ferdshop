@@ -13,14 +13,17 @@ type Props = {
 export const Button = ({ isLoading, children, className, ...props }: Props) => {
   return (
     <PrimitiveButton
-      className={className}
+      className={`relative ${className}`}
       disabled={isLoading || props.disabled}
       {...props}
     >
-      <span className="flex items-center justify-center gap-2">
-        {isLoading && <Spinner />}
-        {children}
-      </span>
+      {isLoading && (
+        <span className="absolute inset-0 flex items-center justify-center">
+          <Spinner />
+        </span>
+      )}
+
+      <span className={isLoading ? 'invisible' : ''}>{children}</span>
     </PrimitiveButton>
   );
 };
