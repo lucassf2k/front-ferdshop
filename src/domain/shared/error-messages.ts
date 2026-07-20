@@ -15,6 +15,7 @@ export const API_ERROR_MESSAGES = {
     'Desculpe, ocorreu um erro interno. Tente novamente mais tarde',
   JWT_ERROR: 'Desculpe, sua sessão é inválida ou expirou',
   VALIDATION_ERROR: 'Desculpe, alguns dados informados são inválidos',
+  ERROR_MAP_SERVICE: 'Desculpe, ocorreu um erro no serviço de mapas',
 } as const;
 
 export type ApiErrorCodeType = keyof typeof API_ERROR_MESSAGES;
