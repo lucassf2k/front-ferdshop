@@ -37,7 +37,7 @@ export const CartPage = () => {
       {hasItems && (
         <div className="fixed right-0 bottom-0 left-0 border-t bg-white/90 p-5 backdrop-blur-md">
           <div className="mx-auto w-full max-w-2xl">
-            <CartButton total={totalToPay} />
+            <CartButton total={totalToPay} text="Finalizar pedido" />
           </div>
         </div>
       )}

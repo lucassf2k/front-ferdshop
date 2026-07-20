@@ -1,26 +1,45 @@
+import * as React from 'react';
 import { CreditCard } from 'lucide-react';
+
 import { currencyFormatter } from '@/services/format-currency';
+import { cn } from '@/ui/lib/utils';
 
-interface Props {
+type CartButtonProps = React.ComponentProps<'button'> & {
   total: number;
-}
+  text: string;
+  description?: string;
+};
 
-export const CartButton = ({ total }: Props) => {
+export const CartButton = ({
+  total,
+  text,
+  description,
+  className,
+  type = 'button',
+  ...props
+}: CartButtonProps) => {
   return (
-    <button className="flex w-172 cursor-pointer items-center justify-between rounded-2xl bg-amber-500 px-5 py-4 text-white shadow-lg transition-all hover:bg-amber-600">
+    <button
+      type={type}
+      className={cn(
+        'flex w-172 items-center justify-between rounded-2xl px-5 py-4 text-white shadow-lg transition-all',
+        'bg-amber-500 hover:bg-amber-600',
+        'disabled:cursor-not-allowed disabled:bg-zinc-300 disabled:text-zinc-500 disabled:shadow-none disabled:hover:bg-zinc-300',
+        className,
+      )}
+      {...props}
+    >
       <div className="flex items-center gap-4">
         <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white/20">
           <CreditCard className="h-6 w-6" />
         </div>
 
         <div className="text-left">
-          <strong className="block text-base font-semibold">
-            Finalizar Pedido
-          </strong>
+          <strong className="block text-base font-semibold">{text}</strong>
 
-          <span className="text-sm text-amber-100">
-            Selecione pagamento e entrega
-          </span>
+          {description && (
+            <span className="text-sm text-amber-100">{description}</span>
+          )}
         </div>
       </div>
 
