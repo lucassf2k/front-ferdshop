@@ -89,7 +89,7 @@ export const UploadProductImageForm = ({
         type="submit"
         disabled={!selectedFile || isPending}
         isLoading={isPending}
-        className="cursor-pointer bg-blue-500 font-semibold text-white hover:bg-blue-600"
+        className="cursor-pointer bg-amber-500 font-semibold text-white hover:bg-amber-600"
       >
         {isPending ? 'Enviando arquivo...' : 'Salvar imagem'}
       </Button>

@@ -31,9 +31,7 @@ export const AppPagination = ({
 
   const currentPage = Number(searchParams.get(pageParams) ?? defaultPage);
   const perPage = Number(searchParams.get(perPageParams) ?? defaultPerPage);
-
-  if (totalPages <= 1) return null;
-
+  const isOnePage = totalPages === 1;
   const pages = generatePaginationPage(currentPage, totalPages);
 
   const handleCreateHref = (page: number) => {
@@ -64,21 +62,23 @@ export const AppPagination = ({
     <Pagination className="flex w-full items-center justify-between p-3">
       <PerPageSelect />
 
-      <PaginationContent>
-        <PaginationItem>
-          <Link to={handleCreateHref(Math.max(1, currentPage - 1))}>
-            <PaginationPrevious />
-          </Link>
-        </PaginationItem>
+      {!isOnePage && (
+        <PaginationContent>
+          <PaginationItem>
+            <Link to={handleCreateHref(Math.max(1, currentPage - 1))}>
+              <PaginationPrevious />
+            </Link>
+          </PaginationItem>
 
-        {pages.map(renderPaginationItem)}
+          {pages.map(renderPaginationItem)}
 
-        <PaginationItem>
-          <Link to={handleCreateHref(Math.min(totalPages, currentPage + 1))}>
-            <PaginationNext />
-          </Link>
-        </PaginationItem>
-      </PaginationContent>
+          <PaginationItem>
+            <Link to={handleCreateHref(Math.min(totalPages, currentPage + 1))}>
+              <PaginationNext />
+            </Link>
+          </PaginationItem>
+        </PaginationContent>
+      )}
     </Pagination>
   );
 };

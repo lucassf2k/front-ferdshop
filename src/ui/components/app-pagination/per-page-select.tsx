@@ -23,13 +23,13 @@ export const PerPageSelect = () => {
   };
 
   return (
-    <div className="mt-5 flex items-center gap-2">
+    <div className="flex items-center gap-2">
       <span className="text-sm font-bold text-zinc-700">Items por página</span>
 
       <Select
         value={String(perPage)}
-        onValueChange={(selectedValue) => {
-          handleChangeSelected(selectedValue);
+        onValueChange={(value) => {
+          handleChangeSelected(value);
         }}
       >
         <SelectTrigger className="w-35 max-w-48 border-blue-500 bg-white focus:ring-blue-500">

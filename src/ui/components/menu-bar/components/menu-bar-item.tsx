@@ -24,7 +24,7 @@ export const MenuBarItem = ({ label, Icon, to, info }: Props) => {
         </span>
       )}
 
-      <p className="text-[11px] tracking-wider">{label}</p>
+      <p className="text-[11px] tracking-wider max-[380px]:hidden">{label}</p>
     </Link>
   );
 };

@@ -6,9 +6,10 @@ import { StatusBadge } from './status-badge';
 type UploadAreaProps = {
   children: React.ReactNode;
   previewUrl: string | null;
-  isPending: boolean;
-  isSuccess: boolean;
-  isError: boolean;
+  inputId: string;
+  isPending?: boolean;
+  isSuccess?: boolean;
+  isError?: boolean;
 };
 
 export const UploadArea = ({
@@ -17,10 +18,11 @@ export const UploadArea = ({
   isPending,
   isSuccess,
   isError,
+  inputId,
 }: UploadAreaProps) => {
   return (
     <label
-      htmlFor="image"
+      htmlFor={inputId}
       className="group relative flex min-h-20 cursor-pointer flex-col items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-zinc-300 bg-zinc-50 transition hover:border-zinc-400 hover:bg-zinc-100"
     >
       {children}

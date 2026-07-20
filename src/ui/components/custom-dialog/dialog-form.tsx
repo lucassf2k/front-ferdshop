@@ -42,7 +42,7 @@ export const DialogForm = <TFormValues extends FieldValues>({
         <Button
           type="submit"
           isLoading={isLoading}
-          className="cursor-pointer bg-blue-500 hover:bg-blue-500/90"
+          className="cursor-pointer bg-amber-500 hover:bg-amber-500/90"
         >
           Salvar
         </Button>

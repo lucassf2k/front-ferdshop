@@ -8,9 +8,7 @@ export const useImagePreview = (file?: File) => {
       setPreviewUrl(null);
       return;
     }
-
     const objectUrl = URL.createObjectURL(file);
-
     setPreviewUrl(objectUrl);
 
     return () => {

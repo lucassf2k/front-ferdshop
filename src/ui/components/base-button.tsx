@@ -18,12 +18,12 @@ export const Button = ({ isLoading, children, className, ...props }: Props) => {
       {...props}
     >
       {isLoading && (
-        <span className="absolute inset-0 flex items-center justify-center">
+        <p className="absolute inset-0 flex items-center justify-center">
           <Spinner />
-        </span>
+        </p>
       )}
 
-      <span className={isLoading ? 'invisible' : ''}>{children}</span>
+      <p className={isLoading ? 'invisible' : ''}>{children}</p>
     </PrimitiveButton>
   );
 };

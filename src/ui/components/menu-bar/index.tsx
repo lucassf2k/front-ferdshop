@@ -19,7 +19,7 @@ export const MenuBar = () => {
 
   return (
     <div
-      className={`fixed top-0 left-1/2 z-50 flex h-20 -translate-x-1/2 items-center justify-center bg-blue-700 transition-all duration-500 ${
+      className={`fixed top-0 left-1/2 z-50 flex h-20 min-w-95 -translate-x-1/2 items-center justify-center bg-blue-700 transition-all duration-500 ${
         isScrolled
           ? 'mt-2 w-[80vw] rounded-full bg-blue-700/80 backdrop-blur-md'
           : 'w-screen'
