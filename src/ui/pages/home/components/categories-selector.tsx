@@ -1,31 +1,19 @@
 import { useEffect, useRef, useState } from 'react';
 import { ScrollButton } from './categories-selector/components/scroll-button';
 import { CategoriesSelectorContent } from './categories-selector/components/categories-selector-content';
-import { useCategoriesSelectorUrl } from '@/hooks/use-categories-selector-url';
 import { useQueryListCategories } from '@/hooks/queries/use-fetch-get-categories';
 
 interface Props {
-  onChange?: (id: string) => void;
+  activeCategoryId?: string;
+  onSelect: (id?: string) => void;
 }
 
-export const CategoriesSelector = ({ onChange }: Props) => {
-  const { data, error, isError, isLoading } = useQueryListCategories();
-  const { activeCategoryId, setCategory } = useCategoriesSelectorUrl(data);
+export const CategoriesSelector = ({ activeCategoryId, onSelect }: Props) => {
+  const { data, isError, isLoading } = useQueryListCategories();
   const [scrollState, setScrollState] = useState({
     canScrollLeft: false,
     canScrollRight: false,
   });
-
-  useEffect(() => {
-    if (data) {
-      console.log('dados mudaram:', data);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    if (!activeCategoryId) return;
-    onChange?.(activeCategoryId);
-  }, [activeCategoryId, onChange]);
 
   useEffect(() => {
     const el = scrollRef.current;
@@ -75,7 +63,7 @@ export const CategoriesSelector = ({ onChange }: Props) => {
         isLoading={isLoading}
         error={isError}
         activeCategoryId={activeCategoryId}
-        onSelect={setCategory}
+        onSelect={onSelect}
         scrollRef={scrollRef}
       />
 

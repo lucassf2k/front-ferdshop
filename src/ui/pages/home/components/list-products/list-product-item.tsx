@@ -44,7 +44,7 @@ export const ListProducItem = ({ product }: ListProductItemProps) => {
   };
 
   return (
-    <div className="rounded-2xl bg-white p-4">
+    <div className="min-w-47.5 rounded-2xl bg-white p-4">
       <div className="flex justify-between">
         <img
           src={`${STATIC_URL}/${product.imageUrl}`}

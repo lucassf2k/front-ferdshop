@@ -15,9 +15,9 @@ export const BannerInfoOrganization = () => {
   if (!organization) return null;
 
   return (
-    <section className="-mt-28 mb-8 flex h-44 w-full items-center justify-between rounded-2xl bg-white p-6">
+    <section className="-mt-28 mb-8 flex h-44 w-full min-w-85 items-center justify-between rounded-2xl bg-white p-6">
       <div className="flex items-center gap-6">
-        <div className="h-30 w-30 rounded-3xl border border-blue-500">
+        <div className="h-30 w-30 rounded-3xl border border-blue-500 max-[780px]:hidden">
           <img
             src={logoImage}
             alt="Logo ferdshop"
@@ -55,7 +55,7 @@ export const BannerInfoOrganization = () => {
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-3 max-[780px]:flex-col max-[560px]:hidden">
         <div className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-green-200 hover:bg-green-700">
           <FaWhatsapp className="h-full w-full p-2 text-green-700 hover:text-white" />
         </div>

@@ -14,8 +14,8 @@ interface Props {
   error: boolean;
   isLoading: boolean;
   scrollRef: React.RefObject<HTMLDivElement | null>;
-  activeCategoryId: string;
-  onSelect: (id: string) => void;
+  activeCategoryId?: string;
+  onSelect: (id?: string) => void;
 }
 
 const buttonVariants = cva(
@@ -51,11 +51,20 @@ export const CategoriesSelectorContent = ({
     return <p>Nenhuma categoria encontrada</p>;
   }
 
+  const isAllActive = activeCategoryId === undefined;
+
   return (
     <div
       className="no-scrollbar flex max-w-200 snap-x snap-mandatory items-center gap-3 overflow-x-auto py-3"
       ref={scrollRef}
     >
+      <Button
+        onClick={() => onSelect(undefined)}
+        className={buttonVariants({ active: isAllActive })}
+      >
+        Todos
+      </Button>
+
       {data?.map((category) => {
         const isActive = category.id === activeCategoryId;
 

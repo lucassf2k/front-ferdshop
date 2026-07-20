@@ -13,7 +13,7 @@ export const ShoppingCart = () => {
   const hasItems = cart.length > 0;
 
   return (
-    <div className="sticky top-24 max-w-104 rounded-2xl bg-white">
+    <div className="sticky top-24 hidden max-w-104 rounded-2xl bg-white min-[1200px]:block">
       <div className="py-5">
         <div className="flex items-center gap-5 px-8">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500">
