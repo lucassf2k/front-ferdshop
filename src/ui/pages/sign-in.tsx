@@ -55,7 +55,7 @@ export const SignInPage = () => {
                   <div className="flex w-70 items-center justify-around text-[14px] text-neutral-500">
                     <p className="">Esqueci minha senha</p>
                     <p>|</p>
-                    <Link to="/sign-up">Cadastrar nova conta</Link>
+                    <Link to="/cadastro/usuario">Cadastrar nova conta</Link>
                   </div>
                 </div>
 

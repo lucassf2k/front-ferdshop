@@ -11,7 +11,6 @@ export const SignUpPage = () => {
       formState: { errors },
       handleSubmit,
     },
-    data,
     isPending,
     handleSignUp,
   } = useSignUpController();
@@ -64,7 +63,7 @@ export const SignUpPage = () => {
               <div className="mt-4 w-full gap-2">
                 <div className="flex w-full justify-center">
                   <div className="flex w-70 items-center justify-around text-[14px] text-neutral-500">
-                    <Link to="/">Já tenho uma conta</Link>
+                    <Link to="/login">Já tenho uma conta</Link>
                   </div>
                 </div>
 
