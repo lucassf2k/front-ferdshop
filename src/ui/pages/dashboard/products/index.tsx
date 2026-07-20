@@ -10,9 +10,12 @@ import { AppPagination } from '@/ui/components/app-pagination';
 import { usePaginationParams } from '@/hooks/use-pagination-params';
 import { usePaginationMeta } from '@/hooks/use-pagination-meta';
 import { DataTableSkeleton } from '@/ui/components/skeletons/data-table-skeleton';
+import { RegisterProductDialog } from '../components/register-product';
+import { useSearchParams } from 'react-router';
 
 export const DashboardProductsPage = () => {
-  const { page, perPage } = usePaginationParams();
+  const [searchParams] = useSearchParams();
+  const { page, perPage } = usePaginationParams(searchParams);
 
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -44,7 +47,7 @@ export const DashboardProductsPage = () => {
   const products = hasProducts ? productData.products : [];
 
   return (
-    <TableWrapper>
+    <TableWrapper title="Produtos" createComp={<RegisterProductDialog />}>
       {isPending ? (
         <DataTableSkeleton />
       ) : (
@@ -57,9 +60,12 @@ export const DashboardProductsPage = () => {
                   id: product.id,
                   name: product.name,
                   price: product.price,
-                  stock: product.price,
+                  stock: product.stock,
                   description: product.description || '',
-                  categoryId: product.id,
+                  category: {
+                    id: product.category.id,
+                    name: product.category.name,
+                  },
                   imageUrl: product.imageUrl,
                 }}
               />

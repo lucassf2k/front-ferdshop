@@ -44,6 +44,10 @@ export const productColumns = (
       },
     },
     {
+      accessorKey: 'category.name',
+      header: 'Categoria',
+    },
+    {
       accessorKey: 'imageUrl',
       header: 'Imagem',
     },
