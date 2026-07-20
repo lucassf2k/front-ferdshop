@@ -8,11 +8,15 @@ export type ProductModel = {
   id: string;
   name: string;
   price: number;
+  stock: number;
   imageUrl: string;
   description: string | undefined;
   createdAt: Date;
   updatedAt: Date;
   reviews: Review[];
   reviewCount: number;
-  categoryId: string;
+  category: {
+    id: string;
+    name: string;
+  };
 };

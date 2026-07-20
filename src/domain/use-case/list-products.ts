@@ -5,6 +5,8 @@ import type { Result } from '../shared/result';
 export type ListProductsInput = {
   page: string;
   perPage: string;
+  name?: string;
+  categoryId?: string;
 };
 
 export type ListProductsOutput = {

@@ -6,11 +6,16 @@ import { listProductsService } from '@/services/list-products';
 type Input = {
   page: string;
   perPage: string;
+  name?: string;
+  categoryId?: string;
 };
 
 export const useListProductsQuery = (input: Input) => {
   return useBaseApiQuery({
-    queryKey: queries.productKeys.pagination(input.page, input.perPage),
+    queryKey: queries.productKeys.search(input.page, input.perPage, {
+      name: input.name,
+      categoryId: input.categoryId,
+    }),
     service: () => unwrapResultOrThrow(listProductsService(input)),
   });
 };
