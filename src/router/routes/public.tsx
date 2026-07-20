@@ -5,6 +5,7 @@ import { SignInPage } from '@/ui/pages/sign-in';
 import { SignUpPage } from '@/ui/pages/sign-up';
 import { LayoutNormalUsers } from '@/ui/layouts/layout-normal-users';
 import { CartPage } from '@/ui/pages/cart';
+import { PaymentPage } from '@/ui/pages/payment';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -16,6 +17,7 @@ export const publicRoutes: RouteObject[] = [
         element: <HomePage />,
       },
       { path: 'carrinho', element: <CartPage /> },
+      { path: 'pagamento', element: <PaymentPage /> },
     ],
   },
   {
