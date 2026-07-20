@@ -8,7 +8,7 @@ type Input = {
   perPage: string;
 };
 
-export const useQueriesListUsers = (input: Input) => {
+export const useListUsersQuery = (input: Input) => {
   return useBaseApiQuery({
     queryKey: queries.userKeys.all,
     service: () => unwrapResultOrThrow(listUsersService(input)),
