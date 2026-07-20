@@ -9,6 +9,12 @@ import { useQueryListCategories } from '@/hooks/queries/use-fetch-get-categories
 import { Button } from '@/ui/components/base-button';
 import { UploadProductImageForm } from '@/ui/components/upload-product-image';
 import { LoadFile } from '@/ui/components/load-file.tsx';
+import { useUploadProductImageMutation } from '@/hooks/mutations/use-upload-product-image-mutation';
+import { useUpdateProductImageMutation } from '@/hooks/mutations/use-update-product-image-mutation';
+import { useUpdateProductMutation } from '@/hooks/mutations/use-update-product-mutation';
+import { toast } from 'sonner';
+import { queries } from '@/constants/queries';
+import { useQueryClient } from '@tanstack/react-query';
 
 type UpdateProductDialogProps = {
   product: {
@@ -17,7 +23,10 @@ type UpdateProductDialogProps = {
     price: number;
     stock: number;
     description: string;
-    categoryId: string;
+    category: {
+      id: string;
+      name: string;
+    };
     imageUrl: string;
   };
 };
@@ -43,30 +52,26 @@ export const UpdateProductDialog = ({ product }: UpdateProductDialogProps) => {
       price: currencyFormatter.formatInput(String(product.price)),
       stock: String(product.stock),
       description: product.description,
-      categoryId: product.categoryId,
+      categoryId: product.category.id,
     },
   });
+  const queryClient = useQueryClient();
   const [updatingImage, setUpdatingImage] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { data: categoryData = [] } = useQueryListCategories();
-
-  useEffect(() => {
-    reset({
-      name: product.name,
-      price: currencyFormatter.formatInput(String(product.price)),
-      stock: String(product.stock),
-      description: product.description,
-      categoryId: product.categoryId,
-    });
-    setUpdatingImage(false);
-    console.log(updatingImage);
-  }, [product, reset]);
+  const {
+    mutate: updateProductImageMutate,
+    isPending: isPendingUpdatingProductImage,
+  } = useUpdateProductImageMutation();
+  const { mutate: updateProductMutate, isPending: isPendingUpdateProduct } =
+    useUpdateProductMutation();
 
   const handleCloseDialog = (isOpen: boolean) => {
-    if (!isOpen) {
+    if (isOpen) {
       reset();
-      setInterval(() => setUpdatingImage(false), 200);
+      setUpdatingImage(false);
+      setSelectedFile(null);
     }
     setIsOpen(isOpen);
   };
@@ -75,13 +80,50 @@ export const UpdateProductDialog = ({ product }: UpdateProductDialogProps) => {
     if (file === null) return;
     setSelectedFile(file);
   };
-  const handleUpdateProduct: SubmitHandler<FormData> = (data) => {
-    console.log(data);
 
-    // mutation.update({
-    //   id: product.id,
-    //   ...data,
-    // });
+  const handleUpdateProductImage = () => {
+    if (selectedFile === null) return;
+    updateProductImageMutate(
+      {
+        id: product.id,
+        file: selectedFile,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Imagem atualizado com sucesso!');
+          queryClient.invalidateQueries({
+            queryKey: queries.productKeys.all,
+          });
+          setUpdatingImage(false);
+          setSelectedFile(null);
+          reset();
+        },
+      },
+    );
+  };
+
+  const handleUpdateProduct: SubmitHandler<FormData> = (data) => {
+    updateProductMutate(
+      {
+        id: product.id,
+        name: data.name,
+        price: currencyFormatter.parseToNumber(data.price),
+        stock: Number(data.stock),
+        categoryId: data.categoryId,
+        description: data.description,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Produto atualizado com sucesso!');
+          queryClient.invalidateQueries({
+            queryKey: queries.productKeys.all,
+          });
+          setUpdatingImage(false);
+          setSelectedFile(null);
+          reset();
+        },
+      },
+    );
   };
 
   const handleUpdateImageUrl = () => setUpdatingImage(true);
@@ -119,7 +161,18 @@ export const UpdateProductDialog = ({ product }: UpdateProductDialogProps) => {
           </>
         )}
         {updatingImage && (
-          <LoadFile file={selectedFile} onChange={handleSetFile} />
+          <div className="flex w-full flex-col gap-4">
+            <LoadFile file={selectedFile} onChange={handleSetFile} />
+            <Button
+              type="button"
+              onClick={handleUpdateProductImage}
+              isLoading={isPendingUpdatingProductImage}
+              disabled={!Boolean(selectedFile)}
+              className="cursor-pointer bg-amber-500 hover:bg-amber-500/90"
+            >
+              Salvar imagem
+            </Button>
+          </div>
         )}
         {/* {updatingImage && <UploadProductImageForm />} */}
       </div>
