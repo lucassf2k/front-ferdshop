@@ -2,6 +2,7 @@ import { useMutation, type UseMutationOptions } from '@tanstack/react-query';
 import { useAppToastError } from '@/contexts/app-error-toast';
 import { appError, type AppError } from '@/domain/shared/api-error';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router';
 
 type Service<TData, TVariables> = (variables: TVariables) => Promise<TData>;
 
@@ -21,6 +22,7 @@ export const useBaseApiMutation = <
   service,
   options,
 }: UseBaseMutationParams<TData, TVariables, TContext>) => {
+  const navigate = useNavigate();
   const { showError } = useAppToastError();
 
   return useMutation<TData, AppError, TVariables, TContext>({
@@ -44,15 +46,19 @@ export const useBaseApiMutation = <
 
     onError: (error, variables, onMutateResult, context) => {
       switch (error.type) {
-        case 'ApiError':
-          toast.warning(appError.toUserMessage(error));
+        case 'ApiError': {
+          const message = appError.toUserMessage(error);
+          toast.warning(message);
+          if (error.code === 'UNAUTHORIZED' || error.code === 'FORBIDDEN') {
+            navigate('/login');
+          }
           break;
+        }
         case 'NetworkError':
         case 'UnknownError':
           showError(appError.toUserMessage(error));
           break;
       }
-
       options?.onError?.(error, variables, onMutateResult, context);
     },
 
