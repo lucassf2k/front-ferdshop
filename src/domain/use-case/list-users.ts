@@ -1,5 +1,6 @@
-import type { AppError } from '../shared/api-error';
-import type { Result } from '../shared/result';
+import type { UserModel } from '@/domain/model/user';
+import type { AppError } from '@/domain/shared/api-error';
+import type { Result } from '@/domain/shared/result';
 
 export type ListUsersInput = {
   page: string;
@@ -7,12 +8,9 @@ export type ListUsersInput = {
 };
 
 export type ListUsersOutput = {
-  id: string;
-  name: string;
-  email: string;
-  createdAt: Date;
-  updatedAt: Date;
-}[];
+  users: UserModel[];
+  total: number;
+};
 
 export type ListUsers = (
   input: ListUsersInput,
