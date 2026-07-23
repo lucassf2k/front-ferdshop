@@ -1,121 +1,83 @@
-import { Link } from 'react-router';
-import { IoIosArrowRoundBack } from 'react-icons/io';
-import { CarTaxiFrontIcon, HomeIcon } from 'lucide-react';
-import { Badge } from '@/ui/components/ui/badge';
-import type { IconType } from 'react-icons/lib';
-import { cn } from '@/ui/lib/utils';
-import { BaseInput } from '@/ui/components/form/input';
-import { mask } from '@/ui/lib/mask';
-import { useState } from 'react';
-import { MdDeliveryDining } from 'react-icons/md';
-import { FaLocationDot } from 'react-icons/fa6';
-import {
-  SelectableOption,
-  selectableSingleOption,
-  toggleSelectableOption,
-  type SelectableOptionItem,
-} from './components/selectable-option';
-import { CartButton } from '../cart/components/cart-button';
 import { useCartTotalPrice } from '@/stores/cart';
-import { PiMoneyWavy } from 'react-icons/pi';
-import { CiMoneyCheck1 } from 'react-icons/ci';
-import { FaPix } from 'react-icons/fa6';
-import { PaymentCardWrapper } from './components/payment-wrapper';
-import { Checkbox } from '@/ui/components/ui/checkbox';
-import { CheckBoxWithLabel } from './components/checkbox-with-label';
-import { WrapperWithCheckBox } from './components/paymente-selectable-form';
+import { Button } from '@/ui/components/base-button';
+import { BaseInput } from '@/ui/components/form/input';
+import { Switch } from '@/ui/components/form/switch';
 import { LeafletMap } from '@/ui/components/maps/leaflet';
-import type { GetAddressOutput } from '@/domain/use-case/get-address';
-
-interface BadgePaymentFlowProps {
-  label: string;
-  Icon: IconType;
-  selected?: boolean;
-}
-
-const BadgePaymentFlow = ({ label, Icon, selected }: BadgePaymentFlowProps) => {
-  return (
-    <Badge
-      variant="outline"
-      className={cn(
-        'flex cursor-pointer items-center gap-2 px-5 py-1.5 text-[13px] text-zinc-500 transition-colors',
-        selected
-          ? 'border-amber-500 bg-amber-500 text-white hover:bg-amber-500 hover:text-white'
-          : 'hover:bg-amber-300/20 hover:font-bold hover:text-amber-600',
-      )}
-    >
-      <Icon className="h-4! w-4! text-current" />
-      {label}
-    </Badge>
-  );
-};
+import { Badge } from '@/ui/components/ui/badge';
+import { WrapperAnimatedCollapse } from '@/ui/components/wrapper-animated-collapse';
+import { formatter } from '@/ui/lib/formatters';
+import { mask } from '@/ui/lib/mask';
+import { cn } from '@/ui/lib/utils';
+import { CarTaxiFrontIcon, HomeIcon } from 'lucide-react';
+import { useState } from 'react';
+import { FaLocationDot } from 'react-icons/fa6';
+import { IoIosArrowRoundBack } from 'react-icons/io';
+import { Link } from 'react-router';
+import { CartButton } from '@/ui/pages/cart/components/cart-button';
+import { CheckBoxWithLabel } from '@/ui/pages/payment/components/checkbox-with-label';
+import { PaymentCardWrapper } from '@/ui/pages/payment/components/payment-wrapper';
+import { WrapperWithCheckBox } from '@/ui/pages/payment/components/paymente-selectable-form';
+import { SelectableOption } from '@/ui/pages/payment/components/selectable-option';
+import {
+  DELIVERY_OPTIONS,
+  ONLINE_PAYMENT_OPTIONS,
+  PAYMENT_OPTIONS,
+  type DeliveryOptionsIds,
+  type OnlinePaymentIds,
+  type PaymentOptionsIds,
+} from '@/ui/pages/payment/constants';
+import { PaymentBadge } from '@/ui/pages/payment/components/payment-badge';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  PAYMENT_DEFAULT_VALUES,
+  paymentFormSchema,
+  type PaymentFormSchema,
+} from '@/schemas/payment-infos';
 
 export const PaymentPage = () => {
+  const form = useForm<PaymentFormSchema>({
+    resolver: zodResolver(paymentFormSchema),
+    defaultValues: PAYMENT_DEFAULT_VALUES,
+  });
+
   const totalToPay = useCartTotalPrice();
   const [phone, setPhone] = useState('');
-  const [deliveryOptions, setDeliveryOptions] = useState<
-    SelectableOptionItem[]
-  >([
-    {
-      id: 'delivery',
-      title: 'Entrega',
-      description: 'Previsão cerca de 90 min',
-      Icon: MdDeliveryDining,
-      ariaLabel: 'Selecionar entrega',
-      selected: true,
-    },
-    {
-      id: 'pickup',
-      title: 'Retirada',
-      description: 'Retirada na loja',
-      Icon: FaLocationDot,
-      ariaLabel: 'Selecionar retirada',
-      selected: false,
-    },
-  ]);
-  const [paymentOptions, setPaymentOptions] = useState<SelectableOptionItem[]>([
-    {
-      id: 'cash',
-      title: 'Dinheiro',
-      description: 'Clique e digite o troco',
-      Icon: PiMoneyWavy,
-      ariaLabel: 'Selecionar dinheiro',
-      selected: true,
-    },
-    {
-      id: 'card',
-      title: 'Cartão',
-      description: 'Pague na maquininha',
-      Icon: CiMoneyCheck1,
-      ariaLabel: 'Selecionar cartão',
-      selected: false,
-    },
-    {
-      id: 'pix',
-      title: 'online',
-      description: 'Pague com pix',
-      Icon: FaPix,
-      ariaLabel: 'Selecionar pix',
-      selected: false,
-    },
-  ]);
+  const [deliverySelected, setDeliverySelected] =
+    useState<DeliveryOptionsIds>('delivery');
+
+  const [selectedPayment, setSelectedPayment] =
+    useState<PaymentOptionsIds>('cash');
+  const [onlinePaymentSelected, setOnlinePaymentSelected] =
+    useState<OnlinePaymentIds>('pix');
+
   const [address, setAddress] = useState({
     displayName: '',
   });
+  const [answer, setAnswer] = useState<boolean>(false);
+  const [isScheduleOrder, setIsScheduleOrder] = useState<boolean>(false);
+  const [shouldSendOrderViaWhatsapp, setShouldSendOrderViaWhatsapp] =
+    useState<boolean>(false);
 
-  const handleToggleDeliveryOption = (optionId: string) => {
-    return () =>
-      setDeliveryOptions((prev) => selectableSingleOption(prev, optionId));
+  const handleToggleDeliveryOption = (optionId: DeliveryOptionsIds) => {
+    return () => setDeliverySelected(optionId);
   };
 
-  const handleTogglePaymentOption = (optionId: string) => {
-    return () =>
-      setPaymentOptions((prev) => selectableSingleOption(prev, optionId));
+  const handleTogglePaymentOption = (optionId: PaymentOptionsIds) => {
+    return () => setSelectedPayment(optionId);
   };
+
+  const handleToggleOnlinePaymentOption = (optionId: OnlinePaymentIds) => {
+    return () => setOnlinePaymentSelected(optionId);
+  };
+
+  const isCashSelected = selectedPayment === 'cash';
+  const isDeliverySelected = deliverySelected === 'delivery';
+  const isOnlineSelected = selectedPayment === 'online';
 
   return (
     <div className="mt-20 min-h-[calc(100vh-80px)] bg-white pb-36">
-      <div className="relative flex flex-col items-center py-4 after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-linear-to-r after:from-transparent after:via-amber-500 after:to-transparent after:content-['']">
+      <div className="relative flex flex-col items-center py-4 shadow-md after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-linear-to-r after:from-transparent after:via-amber-500 after:to-transparent after:content-['']">
         <div className="mx-auto flex w-[80%] items-center justify-between">
           <Link
             to="/carrinho"
@@ -139,18 +101,23 @@ export const PaymentPage = () => {
         </div>
         {/* BADGE */}
         <div className="mt-4 flex items-center gap-2">
-          <BadgePaymentFlow label="Carrinho" Icon={CarTaxiFrontIcon} />
-          <BadgePaymentFlow
+          <PaymentBadge
+            label="Carrinho"
+            Icon={CarTaxiFrontIcon}
+            to="/carrinho"
+          />
+          <PaymentBadge
             label="Pagamento"
             Icon={CarTaxiFrontIcon}
+            to="/pagamento"
             selected
           />
         </div>
       </div>
 
-      <div className="flex flex-col items-center gap-4 overflow-y-auto bg-zinc-200 py-2">
+      <div className="flex flex-col items-center gap-4 overflow-y-auto bg-gray-50 py-2">
         {/* DADOS PESSOIAS */}
-        <div className="mx-auto mt-4 w-[80%] rounded-2xl bg-white px-4 py-6">
+        <div className="shadow-card mx-auto mt-4 w-[80%] rounded-2xl bg-white px-4 py-6">
           <div className="flex items-center gap-3 border-b pb-4">
             <Badge variant="outline" className="h-8 w-8 bg-amber-500/20">
               <CarTaxiFrontIcon className="h-4! w-4! font-bold text-amber-600" />
@@ -180,93 +147,150 @@ export const PaymentPage = () => {
         </div>
 
         {/* DADOS DE ENTREGA */}
-        <div className="mx-auto w-[80%] rounded-2xl bg-white px-4 py-6">
+        <div className="shadow-card mx-auto w-[80%] rounded-2xl bg-white px-4 py-6">
           <div className="flex items-center gap-3 border-b pb-4">
             <Badge variant="outline" className="h-8 w-8 bg-amber-500/20">
               <CarTaxiFrontIcon className="h-4! w-4! font-bold text-amber-600" />
             </Badge>{' '}
-            <h4 className="text-md font-bold uppercase">dados de entrega</h4>
+            <h4 className="text-md font-bold uppercase">opções de entrega</h4>
           </div>
           <div className="mt-3 space-y-3">
-            {deliveryOptions.map((option) => (
+            {DELIVERY_OPTIONS.map((option) => (
               <SelectableOption
                 key={option.id}
                 title={option.title}
                 description={option.description}
                 Icon={option.Icon}
-                selected={option.selected}
-                onClick={handleToggleDeliveryOption(option.id)}
+                selected={deliverySelected === option.id}
                 aria-label={option.ariaLabel}
+                onClick={handleToggleDeliveryOption(option.id)}
               />
             ))}
           </div>
         </div>
 
         {/* CASO DE ENTREGA: ENDEREÇO */}
-        <PaymentCardWrapper className="border border-slate-300 bg-slate-200 p-6 shadow-none">
-          <div className="space-y-3">
-            <WrapperWithCheckBox checkBoxLabel="Digite o endereço">
-              <div className="mt-3 flex items-center">
-                <div className="flex h-11 w-11 items-center justify-center border">
-                  <FaLocationDot className="text-green-500" />
+        <WrapperAnimatedCollapse
+          open={isDeliverySelected}
+          className={`w-full ${isDeliverySelected ? 'mb-0' : '-mb-4'}`}
+        >
+          <PaymentCardWrapper className="border border-slate-300 bg-slate-200 p-6 shadow-none">
+            <div className="space-y-3">
+              <WrapperWithCheckBox checkBoxLabel="Digite o endereço">
+                <div className="mt-3 flex items-center">
+                  <div className="flex h-11 w-11 items-center justify-center border">
+                    <FaLocationDot className="text-green-500" />
+                  </div>
+                  <BaseInput
+                    containerClassName="w-full"
+                    labelClassName="text-sm text-gray-500"
+                    className="border-gray-200 focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
+                    placeholder="Cidade, bairro, rua"
+                  />
                 </div>
-                <BaseInput
-                  containerClassName="w-full"
-                  labelClassName="text-sm text-gray-500"
-                  className="border-gray-200 focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
-                  placeholder="Cidade, bairro, rua"
-                />
-              </div>
-              <div className="relative mt-3">
-                <BaseInput
-                  label="NÚMERO"
-                  containerClassName="w-full"
-                  labelClassName="text-[10px] text-gray-500"
-                  className="border-gray-200 focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
-                  placeholder="Número da sua residência"
+                <div className="relative mt-3">
+                  <BaseInput
+                    label="NÚMERO"
+                    containerClassName="w-full"
+                    labelClassName="text-[10px] text-gray-500"
+                    className="border-gray-200 focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
+                    placeholder="Número da sua residência"
+                  />
+
+                  <CheckBoxWithLabel
+                    label="Sem número"
+                    className="absolute -top-1 right-0"
+                  />
+                </div>
+              </WrapperWithCheckBox>
+
+              {/* MAPA */}
+              <WrapperWithCheckBox checkBoxLabel="Obter no mapa">
+                <LeafletMap
+                  onChange={(address) =>
+                    setAddress({ displayName: address.displayName || '' })
+                  }
                 />
 
-                <CheckBoxWithLabel
-                  label="Sem número"
-                  className="absolute -top-1 right-0"
-                />
-              </div>
-            </WrapperWithCheckBox>
+                <div className="mt-1">
+                  <p className="text-gray-600">{address.displayName}</p>
+                </div>
+              </WrapperWithCheckBox>
+            </div>
 
-            {/* MAPA */}
-            <WrapperWithCheckBox checkBoxLabel="Obter no mapa">
-              <LeafletMap
-                onChange={(address) =>
-                  setAddress({ displayName: address.displayName || '' })
-                }
+            {/* COMPLEMENTO */}
+            <div className="mt-3 space-y-2">
+              <BaseInput
+                label="Possui complemento?"
+                containerClassName="w-full"
+                labelClassName="text-sm text-gray-500"
+                className="border-gray-400 bg-white focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
+                placeholder="Ex.: Apartamento 123 ou Casa 453"
               />
+              <BaseInput
+                label="Algum ponto de referência?"
+                containerClassName="w-full"
+                labelClassName="text-sm text-gray-500"
+                className="border-gray-400 bg-white focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
+                placeholder="Ex.: Perto da escola"
+              />
+            </div>
+          </PaymentCardWrapper>
+        </WrapperAnimatedCollapse>
 
-              <div className="mt-1">
-                <p className="text-gray-600">{address.displayName}</p>
+        <div className="mx-auto w-[80%]">
+          <div className="border-t border-b border-gray-400 py-6">
+            <div className="flex w-full items-center justify-between">
+              <p className="font-semibold">Valor da comprar: </p>
+              <p className="text-gray-600">{formatter.currency(8.7)}</p>
+            </div>
+            <div className="flex w-full items-center justify-between">
+              <p className="font-semibold">Taxa de entrega: </p>
+              <p className="text-green-600">Grátis</p>
+            </div>
+            <div className="flex w-full items-center justify-between">
+              <p className="font-semibold">Valor total: </p>
+              <p className="text-gray-600">{formatter.currency(8.7)}</p>
+            </div>
+          </div>
+
+          <div className="border-b border-gray-400 py-6">
+            <BaseInput
+              label="ALGUMA OBSERVAÇÃO?"
+              containerClassName="w-full"
+              labelClassName="text-sm font-normal"
+              className="border-gray-400 bg-white focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
+              placeholder="Ex.: Chame no portão"
+            />
+
+            <div className="mt-4 flex flex-col items-start justify-center gap-3">
+              <Switch
+                id="send-whatsapp"
+                label="Enviar pedido pelo whatsapp"
+                checked={isScheduleOrder}
+                onCheckedChange={setIsScheduleOrder}
+              />
+              <div className="space-y-6">
+                <Switch
+                  id="send-whatsapp"
+                  label="Agendar esse pedido"
+                  checked={shouldSendOrderViaWhatsapp}
+                  onCheckedChange={setShouldSendOrderViaWhatsapp}
+                />
+                <WrapperAnimatedCollapse open={shouldSendOrderViaWhatsapp}>
+                  <BaseInput
+                    type="date"
+                    labelClassName="text-sm font-normal"
+                    className="border-gray-400 bg-white text-start focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
+                  />
+                </WrapperAnimatedCollapse>
               </div>
-            </WrapperWithCheckBox>
+            </div>
           </div>
+        </div>
 
-          {/* COMPLEMENTO */}
-          <div className="mt-3 space-y-2">
-            <BaseInput
-              label="Possui complemento?"
-              containerClassName="w-full"
-              labelClassName="text-sm text-gray-500"
-              className="border-gray-400 bg-white focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
-              placeholder="Ex.: Apartamento 123"
-            />
-            <BaseInput
-              label="Algum ponto de referência?"
-              containerClassName="w-full"
-              labelClassName="text-sm text-gray-500"
-              className="border-gray-400 bg-white focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
-              placeholder="Ex.: Perto da escola"
-            />
-          </div>
-        </PaymentCardWrapper>
         {/* FORMAS DE PAGAMENTO */}
-        <div className="mx-auto w-[80%] rounded-2xl bg-white px-4 py-6">
+        <div className="shadow-card mx-auto w-[80%] rounded-2xl bg-white px-4 py-6">
           <div className="flex items-center gap-3 border-b pb-4">
             <Badge variant="outline" className="h-8 w-8 bg-amber-500/20">
               <CarTaxiFrontIcon className="h-4! w-4! font-bold text-amber-600" />
@@ -274,18 +298,86 @@ export const PaymentPage = () => {
             <h4 className="text-md font-bold uppercase">forma de pagamento</h4>
           </div>
           <div className="mt-3 space-y-3">
-            {paymentOptions.map((option) => (
+            {PAYMENT_OPTIONS.map((option) => (
               <SelectableOption
                 key={option.id}
                 title={option.title}
                 description={option.description}
                 Icon={option.Icon}
-                selected={option.selected}
-                onClick={handleTogglePaymentOption(option.id)}
                 aria-label={option.ariaLabel}
+                selected={selectedPayment === option.id}
+                onClick={handleTogglePaymentOption(option.id)}
               />
             ))}
           </div>
+
+          <WrapperAnimatedCollapse open={isOnlineSelected} className="mt-3">
+            <div className="boder-gray-400 space-y-3 rounded-lg border p-4">
+              <h4 className="text-[12px] font-bold text-gray-500 uppercase">
+                Escolha método
+              </h4>
+              {ONLINE_PAYMENT_OPTIONS.map((option) => (
+                <SelectableOption
+                  key={option.id}
+                  title={option.title}
+                  description={option.description}
+                  Icon={option.Icon}
+                  aria-label={option.ariaLabel}
+                  selected={onlinePaymentSelected === option.id}
+                  onClick={handleToggleOnlinePaymentOption(option.id)}
+                />
+              ))}
+            </div>
+          </WrapperAnimatedCollapse>
+
+          {/* CASO DINHEIRO - TROCO */}
+          <WrapperAnimatedCollapse open={isCashSelected}>
+            <div className="mt-3 border p-4">
+              <h4 className="text-[12px] font-bold text-gray-500 uppercase">
+                precisa de troco?
+              </h4>
+              <div className="py-4">
+                <div className="flex items-center justify-between">
+                  <Button
+                    variant="outline"
+                    onClick={() => setAnswer(true)}
+                    className={cn(
+                      'h-12 w-[48%] cursor-pointer transition-colors',
+                      answer === true
+                        ? 'border-amber-500 bg-amber-50 text-amber-600 hover:border-amber-500 hover:bg-amber-50 hover:text-amber-600'
+                        : 'border-gray-200 hover:border-amber-300 hover:bg-amber-50/40 hover:text-amber-600',
+                    )}
+                  >
+                    Sim
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    onClick={() => setAnswer(false)}
+                    className={cn(
+                      'h-12 w-[48%] cursor-pointer transition-colors',
+                      answer === false
+                        ? 'border-amber-500 bg-amber-50 text-amber-600 hover:border-amber-500 hover:bg-amber-50 hover:text-amber-600'
+                        : 'border-gray-200 hover:border-amber-300 hover:bg-amber-50/40 hover:text-amber-600',
+                    )}
+                  >
+                    Não
+                  </Button>
+                </div>
+
+                <WrapperAnimatedCollapse open={answer} className="mt-3 w-full">
+                  <BaseInput
+                    type="number"
+                    label="PARA QUANTO?"
+                    containerClassName="w-full"
+                    labelClassName="text-sm text-gray-500"
+                    className="border-gray-200 focus-visible:border-amber-500 focus-visible:ring-2 focus-visible:ring-amber-500/50"
+                    placeholder="R$ 0,00"
+                  />
+                </WrapperAnimatedCollapse>
+              </div>
+            </div>
+          </WrapperAnimatedCollapse>
         </div>
       </div>
 

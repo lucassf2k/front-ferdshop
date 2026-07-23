@@ -3,8 +3,8 @@ import { CiCircleCheck } from 'react-icons/ci';
 import type { IconType } from 'react-icons';
 import { cn } from '@/ui/lib/utils';
 
-export type SelectableOptionItem = {
-  id: string;
+export type SelectableOptionItem<IDs> = {
+  id: IDs;
   title: string;
   description: string;
   Icon: IconType;
