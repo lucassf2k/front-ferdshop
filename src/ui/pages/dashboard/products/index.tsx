@@ -1,9 +1,7 @@
 import { useListProductsQuery } from '@/hooks/queries/use-list-products-query';
 import { ProductsTable } from './table';
 import { TableWrapper } from '../components/table-wrapper';
-import { useState } from 'react';
 import { UpdateProductDialog } from './components/update-register-dialog';
-import type { ProductDataTable } from './table/config';
 import { useSoftDeleteProductOfIdMutation } from '@/hooks/mutations/use-soft-delete-product-of-id-mutation';
 import { DeleteTableItemDialog } from '../components/delete-table-item-dialog';
 import { AppPagination } from '@/ui/components/app-pagination';
@@ -16,9 +14,6 @@ import { useSearchParams } from 'react-router';
 export const DashboardProductsPage = () => {
   const [searchParams] = useSearchParams();
   const { page, perPage } = usePaginationParams(searchParams);
-
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-
   const { data: productData, isPending } = useListProductsQuery({
     page,
     perPage,
@@ -33,10 +28,6 @@ export const DashboardProductsPage = () => {
   const { mutate: deleteProductMutate, isPending: isDeleteProductPending } =
     useSoftDeleteProductOfIdMutation();
 
-  const handleEditProduct = (product: ProductDataTable) => {
-    setIsEditing((prev) => !prev);
-    console.log(product);
-  };
   const handleDeleteProduct = (id: string) => {
     return () => deleteProductMutate({ id });
   };

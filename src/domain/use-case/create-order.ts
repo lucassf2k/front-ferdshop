@@ -40,6 +40,8 @@ export type CreateOrderInput = {
   scheduleOrder: boolean;
   scheduleDate: Date | null;
   sendWhastsapp: boolean;
+  latitude: number | null;
+  longitude: number | null;
 };
 export type CreateOrderOutput = {
   id: string;

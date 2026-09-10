@@ -25,7 +25,7 @@ export const TableWrapper = ({ children, title, createComp }: Props) => {
           <h3 className="text-4xl font-bold text-white">{title}</h3>
           {CreateComp}
         </div>
-        <div className="rounded-md border bg-white py-2">{children}</div>
+        <div className="rounded-md border bg-white">{children}</div>
       </div>
     </div>
   );

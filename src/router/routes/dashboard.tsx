@@ -3,6 +3,8 @@ import { AuthGuard } from '@/router/guards/auth-guard';
 import { RootDashboardLayout } from '@/ui/pages/dashboard/layout';
 import { DashboardUsersPage } from '@/ui/pages/dashboard/users';
 import { DashboardProductsPage } from '@/ui/pages/dashboard/products';
+import { DashboardOrdersPage } from '@/ui/pages/dashboard/orders';
+import { DashboardCategoriesPage } from '@/ui/pages/dashboard/categorias';
 
 export const dashboardRoutes: RouteObject = {
   path: 'dashboard',
@@ -13,6 +15,8 @@ export const dashboardRoutes: RouteObject = {
       children: [
         { path: 'produtos', element: <DashboardProductsPage /> },
         { path: 'usuarios', element: <DashboardUsersPage /> },
+        { path: 'pedidos', element: <DashboardOrdersPage /> },
+        { path: 'categorias', element: <DashboardCategoriesPage /> },
       ],
     },
   ],
