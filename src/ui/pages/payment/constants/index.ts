@@ -3,12 +3,17 @@ import { MdDeliveryDining } from 'react-icons/md';
 import { PiMoneyWavy } from 'react-icons/pi';
 import { CiMoneyCheck1 } from 'react-icons/ci';
 import type { SelectableOptionItem } from '@/ui/pages/payment/components/selectable-option';
+import {
+  DeliveryOptionEnum,
+  OnlinePaymentMethodEnum,
+  PaymentMethodEnum,
+} from '@/domain/use-case/create-order';
 
-export type OnlinePaymentIds = 'pix';
+export type OnlinePaymentIds = OnlinePaymentMethodEnum;
 export const ONLINE_PAYMENT_OPTIONS: SelectableOptionItem<OnlinePaymentIds>[] =
   [
     {
-      id: 'pix',
+      id: OnlinePaymentMethodEnum.PIX,
       title: 'Pix',
       description: 'Transferencia Pix',
       Icon: FaPix,
@@ -17,10 +22,10 @@ export const ONLINE_PAYMENT_OPTIONS: SelectableOptionItem<OnlinePaymentIds>[] =
     },
   ] as const;
 
-export type DeliveryOptionsIds = 'delivery' | 'pickup';
+export type DeliveryOptionsIds = DeliveryOptionEnum;
 export const DELIVERY_OPTIONS: SelectableOptionItem<DeliveryOptionsIds>[] = [
   {
-    id: 'delivery',
+    id: DeliveryOptionEnum.DELIVERY,
     title: 'Entrega',
     description: 'Previsão cerca de 90 min',
     Icon: MdDeliveryDining,
@@ -28,7 +33,7 @@ export const DELIVERY_OPTIONS: SelectableOptionItem<DeliveryOptionsIds>[] = [
     selected: true,
   },
   {
-    id: 'pickup',
+    id: DeliveryOptionEnum.PICKUP,
     title: 'Retirada',
     description: 'Retirada na loja',
     Icon: FaLocationDot,
@@ -37,10 +42,10 @@ export const DELIVERY_OPTIONS: SelectableOptionItem<DeliveryOptionsIds>[] = [
   },
 ] as const;
 
-export type PaymentOptionsIds = 'cash' | 'card' | 'online';
+export type PaymentOptionsIds = PaymentMethodEnum;
 export const PAYMENT_OPTIONS: SelectableOptionItem<PaymentOptionsIds>[] = [
   {
-    id: 'cash',
+    id: PaymentMethodEnum.CASH,
     title: 'Dinheiro',
     description: 'Clique e digite o troco',
     Icon: PiMoneyWavy,
@@ -48,7 +53,7 @@ export const PAYMENT_OPTIONS: SelectableOptionItem<PaymentOptionsIds>[] = [
     selected: false,
   },
   {
-    id: 'card',
+    id: PaymentMethodEnum.CARD,
     title: 'Cartão',
     description: 'Pague na maquininha',
     Icon: CiMoneyCheck1,
@@ -56,7 +61,7 @@ export const PAYMENT_OPTIONS: SelectableOptionItem<PaymentOptionsIds>[] = [
     selected: false,
   },
   {
-    id: 'online',
+    id: PaymentMethodEnum.ONLINE,
     title: 'Online',
     description: 'Pague com Pix',
     Icon: FaPix,

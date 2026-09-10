@@ -28,10 +28,7 @@ const ClickHandler = ({
   useMapEvents({
     async click(event) {
       const [lat, lng]: [number, number] = [event.latlng.lat, event.latlng.lng];
-
       const address = await getAddress(lat, lng);
-
-      console.log(address.address);
       onChange([lat, lng], {
         city: address.address.city,
         country: address.address.country,
@@ -46,11 +43,9 @@ const ClickHandler = ({
 
 const Recenter = ({ position }: { position: [number, number] }) => {
   const map = useMap();
-
   useEffect(() => {
     map.flyTo(position, map.getZoom(), { animate: true });
   }, [map, position]);
-
   return null;
 };
 

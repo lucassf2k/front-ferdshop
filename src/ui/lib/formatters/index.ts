@@ -48,10 +48,17 @@ export const formatAddressDisplayName = (address: Address): string => {
     .join(', ');
 };
 
+export const currencyToNumber = (value: string): number => {
+  const numbers = value.replace(/\D/g, '');
+
+  return Number(numbers) / 100;
+};
+
 export const formatter = {
   date,
   currency,
   unwrapTableValue,
   roleToUser,
+  currencyToNumber,
   formatAddressDisplayName,
 } as const;
