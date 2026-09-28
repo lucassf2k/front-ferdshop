@@ -33,15 +33,15 @@ export const PAYMENT_STATUS_CONFIG: Record<
   { label: string; className: string }
 > = {
   PENDING: {
-    label: 'Pendente',
+    label: 'PENDENTE',
     className: 'bg-amber-100 text-amber-700 ring-amber-300',
   },
   PAID: {
-    label: 'Pago',
+    label: 'PAGO',
     className: 'bg-emerald-100 text-emerald-700 ring-emerald-300',
   },
   CANCELED: {
-    label: 'Cancelado',
+    label: 'CANCELADO',
     className: 'bg-red-100 text-red-700 ring-red-300',
   },
   FAILED: {
@@ -53,6 +53,43 @@ export const PAYMENT_STATUS_CONFIG: Record<
     className: 'bg-slate-100 text-slate-600 ring-slate-300',
   },
 } as const;
+
+export const DELIVERY_OPTION_CONFIG: Record<
+  string,
+  { label: string; className: string }
+> = {
+  DELIVERY: {
+    label: 'Entrega',
+    className:
+      'uppercase text-[12px] bg-violet-100 text-violet-700 ring-violet-300',
+  },
+  PICKUP: {
+    label: 'Retirada',
+    className:
+      'uppercase text-[12px] bg-indigo-100 text-indigo-700 ring-indigo-300',
+  },
+};
+
+export const PAYMENT_OPTION_CONFIG: Record<
+  string,
+  { label: string; className: string }
+> = {
+  CASH: {
+    label: 'Dinheiro',
+    className:
+      'uppercase text-[12px] bg-violet-100 text-violet-700 ring-violet-300',
+  },
+  CARD: {
+    label: 'CARTÃO',
+    className:
+      'uppercase text-[12px] bg-indigo-100 text-indigo-700 ring-indigo-300',
+  },
+  PIX: {
+    label: 'PIX',
+    className:
+      'uppercase text-[12px] bg-indigo-100 text-indigo-700 ring-indigo-300',
+  },
+};
 
 export const PAYMENT_METHOD_CONFIG: Record<
   string,

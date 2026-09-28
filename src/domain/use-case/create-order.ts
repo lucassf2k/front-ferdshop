@@ -1,5 +1,6 @@
 import type { Result } from '@/domain/shared/result';
 import type { AppError } from '@/domain/shared/api-error';
+import type { PaymentStatusEnum } from '../model/order';
 
 export type OrderItem = {
   quantity: number;
@@ -13,14 +14,19 @@ export enum DeliveryOptionEnum {
 }
 
 export enum PaymentMethodEnum {
-  ONLINE = 'ONLINE',
+  ONLINE = 'PIX',
   CARD = 'CARD',
   CASH = 'CASH',
 }
 
-export enum OnlinePaymentMethodEnum {
+export enum PaymentOnlineOptionEnum {
   PIX = 'PIX',
 }
+
+export type Payment = {
+  method: PaymentMethodEnum;
+  status: PaymentStatusEnum;
+};
 
 export type CreateOrderInput = {
   orderItems: OrderItem[];
@@ -33,8 +39,7 @@ export type CreateOrderInput = {
   complement: string | null;
   reference: string | null;
   notes: string | null;
-  paymentMethod: PaymentMethodEnum;
-  onlinePaymentMethod: OnlinePaymentMethodEnum | null;
+  payment: Payment;
   needChange: boolean;
   changeFor: number | null;
   scheduleOrder: boolean;
