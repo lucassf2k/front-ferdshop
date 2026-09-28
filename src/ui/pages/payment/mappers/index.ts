@@ -1,3 +1,4 @@
+import { PaymentStatusEnum } from '@/domain/model/order';
 import {
   DeliveryOptionEnum,
   PaymentMethodEnum,
@@ -33,11 +34,10 @@ export const paymentFormToCreateOrderInput = (
     complement: data.complement || null,
     reference: data.reference || null,
     notes: data.notes || null,
-    paymentMethod: data.paymentMethod,
-    onlinePaymentMethod:
-      data.paymentMethod === PaymentMethodEnum.ONLINE
-        ? data.onlinePayment
-        : null,
+    payment: {
+      method: data.paymentMethod,
+      status: PaymentStatusEnum.PENDING,
+    },
     needChange:
       data.paymentMethod === PaymentMethodEnum.CASH ? data.needChange : false,
     changeFor:

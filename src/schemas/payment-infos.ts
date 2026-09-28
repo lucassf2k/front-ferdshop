@@ -1,6 +1,6 @@
 import {
   DeliveryOptionEnum,
-  OnlinePaymentMethodEnum,
+  PaymentOnlineOptionEnum,
   PaymentMethodEnum,
 } from '@/domain/use-case/create-order';
 import { z } from 'zod';
@@ -10,7 +10,7 @@ export const paymentFormSchema = z.object({
   name: z.string().min(3, 'Nome é obrigatório'),
   deliveryOption: z.enum(DeliveryOptionEnum, 'Opcão de entrega é obrigatória'),
   paymentMethod: z.enum(PaymentMethodEnum, 'Opcão de pagamento é obrigatória'),
-  onlinePayment: z.enum(OnlinePaymentMethodEnum).nullable(),
+  onlinePayment: z.enum(PaymentOnlineOptionEnum).nullable(),
   address: z.string(),
   number: z.string(),
   withoutNumber: z.boolean(),
@@ -33,7 +33,7 @@ export const PAYMENT_DEFAULT_VALUES: PaymentFormSchema = {
   name: '',
   deliveryOption: DeliveryOptionEnum.DELIVERY,
   paymentMethod: PaymentMethodEnum.CASH,
-  onlinePayment: OnlinePaymentMethodEnum.PIX,
+  onlinePayment: PaymentOnlineOptionEnum.PIX,
   address: '',
   latitude: null,
   longitude: null,

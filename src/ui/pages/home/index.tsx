@@ -22,32 +22,19 @@ export const HomePage = () => {
   const currentSearch = searchParams.get('name') ?? '';
   const categoryId = searchParams.get('category') ?? undefined;
   const [draftSearch, setDraftSearch] = useState(currentSearch);
-
   const state = getProductsFiltersState(searchParams);
-
   const { data, isLoading } = useListProductsQuery({
     page: String(page),
     perPage: String(perPage),
     name: state.name,
     categoryId: state.categoryId,
   });
-
-  console.log(state);
-
   const totalProducts = data?.total ?? 0;
   const { totalPages } = usePaginationMeta({
     page,
     perPage,
     total: totalProducts,
   });
-
-  const handlePageChange = (newPage: number) => {
-    setSearchParams((previousParams) => {
-      previousParams.set('page', String(newPage));
-      previousParams.set('perPage', String(perPage));
-      return previousParams;
-    });
-  };
 
   const handleSearch = () => {
     setSearchParams((prev) => {

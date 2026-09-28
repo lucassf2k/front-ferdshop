@@ -5,15 +5,15 @@ import { CiMoneyCheck1 } from 'react-icons/ci';
 import type { SelectableOptionItem } from '@/ui/pages/payment/components/selectable-option';
 import {
   DeliveryOptionEnum,
-  OnlinePaymentMethodEnum,
+  PaymentOnlineOptionEnum,
   PaymentMethodEnum,
 } from '@/domain/use-case/create-order';
 
-export type OnlinePaymentIds = OnlinePaymentMethodEnum;
+export type OnlinePaymentIds = PaymentOnlineOptionEnum;
 export const ONLINE_PAYMENT_OPTIONS: SelectableOptionItem<OnlinePaymentIds>[] =
   [
     {
-      id: OnlinePaymentMethodEnum.PIX,
+      id: PaymentOnlineOptionEnum.PIX,
       title: 'Pix',
       description: 'Transferencia Pix',
       Icon: FaPix,

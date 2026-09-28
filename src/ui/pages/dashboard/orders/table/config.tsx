@@ -3,10 +3,12 @@ import { formatter } from '@/ui/lib/formatters';
 import type { ColumnDef } from '@tanstack/react-table';
 import { OrderStatusBadge } from '../components/order-status-badge';
 import {
+  DELIVERY_OPTION_CONFIG,
   ORDER_STATUS_CONFIG,
-  PAYMENT_METHOD_CONFIG,
+  PAYMENT_OPTION_CONFIG,
   PAYMENT_STATUS_CONFIG,
 } from '@/constants/order';
+import { Link } from 'react-router';
 
 export type OrderDataTable = OrderModel;
 
@@ -19,6 +21,14 @@ export const ordersColumns = (): ColumnDef<OrderDataTable>[] => {
         const value = getValue<string>();
         return formatter.unwrapTableValue(value);
       },
+    },
+    {
+      accessorKey: 'customerName',
+      header: 'Nome do cliente',
+    },
+    {
+      accessorKey: 'customerPhone',
+      header: 'Telefone do cliente',
     },
     {
       accessorKey: 'totalPrice',
@@ -34,6 +44,72 @@ export const ordersColumns = (): ColumnDef<OrderDataTable>[] => {
       cell: ({ getValue }) => {
         const value = getValue<string>();
         return formatter.unwrapTableValue(value);
+      },
+    },
+    {
+      accessorKey: 'addressNumber',
+      header: 'Número da casa',
+      cell: ({ getValue }) => {
+        const value = getValue<string>();
+        return formatter.unwrapTableValue(value);
+      },
+    },
+    {
+      accessorKey: 'deliveryOption',
+      header: 'Opção de entrega',
+      cell: ({ getValue }) => {
+        const value = getValue<string>();
+        return (
+          <OrderStatusBadge value={value} config={DELIVERY_OPTION_CONFIG} />
+        );
+      },
+    },
+    {
+      accessorKey: 'complement',
+      header: 'Complemento',
+      cell: ({ getValue }) => {
+        const value = getValue<string>();
+        return formatter.unwrapTableValue(value);
+      },
+    },
+    {
+      accessorKey: 'reference',
+      header: 'Referência',
+      cell: ({ getValue }) => {
+        const value = getValue<string>();
+        return formatter.unwrapTableValue(value);
+      },
+    },
+    {
+      accessorKey: 'notes',
+      header: 'Observações',
+      cell: ({ getValue }) => {
+        const value = getValue<string>();
+        return formatter.unwrapTableValue(value);
+      },
+    },
+    {
+      accessorKey: 'needChange',
+      header: 'Precisa de troco',
+      cell: ({ getValue }) => {
+        const value = getValue<boolean>();
+        return value ? 'Sim' : 'Não';
+      },
+    },
+    {
+      accessorKey: 'changeFor',
+      header: 'Troco para',
+      cell: ({ getValue }) => {
+        const value = getValue<number>();
+        return formatter.currency(value);
+      },
+    },
+    {
+      accessorKey: 'scheduleDate',
+      header: 'Data de entrega',
+      cell: ({ getValue }) => {
+        const value = getValue<string>();
+        return formatter.date(value);
       },
     },
     {
@@ -53,6 +129,51 @@ export const ordersColumns = (): ColumnDef<OrderDataTable>[] => {
         return `${quantity} ${quantity > 1 ? 'itens' : 'item'}`;
       },
     },
+
+    {
+      accessorFn: (row) => row.payment?.method,
+      id: 'paymentMethod',
+      header: 'Método de pagamento',
+      cell: ({ getValue }) => {
+        const value = getValue<string>();
+        if (!value) return '-';
+        return (
+          <OrderStatusBadge value={value} config={PAYMENT_OPTION_CONFIG} />
+        );
+      },
+    },
+    {
+      accessorFn: (row) => row.payment?.status,
+      id: 'paymentStatus',
+      header: 'Status de pagamento',
+      cell: ({ getValue }) => {
+        const value = getValue<string>();
+        if (!value) return '-';
+        return (
+          <OrderStatusBadge value={value} config={PAYMENT_STATUS_CONFIG} />
+        );
+      },
+    },
+    {
+      accessorFn: (row) => row.payment?.paidAt,
+      id: 'paymentPaidAt',
+      header: 'Pago em',
+      cell: ({ getValue }) => {
+        const value = getValue<string>();
+        if (!value) return '-';
+        return formatter.date(value);
+      },
+    },
+    {
+      accessorFn: (row) => row.payment?.amount,
+      id: 'paymentAmount',
+      header: 'Total pago',
+      cell: ({ getValue }) => {
+        const value = getValue<number>();
+        if (!value) return '-';
+        return formatter.currency(value);
+      },
+    },
     {
       accessorKey: 'createdAt',
       header: 'Criado em',
@@ -62,53 +183,16 @@ export const ordersColumns = (): ColumnDef<OrderDataTable>[] => {
       },
     },
     {
-      accessorKey: 'payment',
-      header: 'Método de pagamento',
+      accessorFn: (row) => row.id,
+      accessorKey: 'action',
+      header: 'Ações',
       cell: ({ getValue }) => {
-        const value = getValue<OrderModel['payment']>();
-        if (!value || value === null) return '-';
-        const cfg = PAYMENT_METHOD_CONFIG[value.method] ?? {
-          label: value.method,
-          icon: '*',
-        };
+        const value = getValue<string>();
         return (
-          <span className="inline-flex items-center gap-1.5 text-sm text-slate-700">
-            <span>{cfg.icon}</span>
-            {cfg.label}
-          </span>
+          <Link to={`${value}`} className="text-sm text-blue-400">
+            Ver detalhes
+          </Link>
         );
-      },
-    },
-    {
-      accessorKey: 'payment',
-      header: 'Status de pagamento',
-      cell: ({ getValue }) => {
-        const value = getValue<OrderModel['payment']>();
-        if (!value || value === null) return '-';
-        return (
-          <OrderStatusBadge
-            value={value.status}
-            config={PAYMENT_STATUS_CONFIG}
-          />
-        );
-      },
-    },
-    {
-      accessorKey: 'payment',
-      header: 'Pago em',
-      cell: ({ getValue }) => {
-        const value = getValue<OrderModel['payment']>();
-        if (!value || value === null || !value.paidAt) return '-';
-        return formatter.date(value.paidAt.toString());
-      },
-    },
-    {
-      accessorKey: 'payment',
-      header: 'Total pago',
-      cell: ({ getValue }) => {
-        const value = getValue<OrderModel['payment']>();
-        if (!value || value === null) return '-';
-        return formatter.currency(value.amount);
       },
     },
   ];
