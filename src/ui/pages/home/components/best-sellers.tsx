@@ -1,5 +1,4 @@
 import { FaFire } from 'react-icons/fa';
-import logoImage from '@/ui/assets/logo.png';
 import { BestSellersSkeleton } from '@/ui/components/skeletons/bes-sellers-skeleton';
 import { useListProductsBestSellersQuery } from '@/hooks/queries/use-list-products-best-sellers-query';
 import { currencyFormatter } from '@/services/format-currency';
@@ -10,6 +9,7 @@ interface BestSellersItemProps {
   price: number;
   sold: number;
   position: number;
+  imageUrl: string;
 }
 
 const badgeStyles = {
@@ -36,6 +36,7 @@ const BestSellersItems = ({
   price,
   sold,
   position,
+  imageUrl,
 }: BestSellersItemProps) => {
   const currentStyle =
     position === 1
@@ -50,7 +51,7 @@ const BestSellersItems = ({
     >
       <div className="relative">
         <img
-          src={logoImage}
+          src={`http://localhost:3001/files/${imageUrl}`}
           alt="Mais vendido"
           className="h-27.5 w-full rounded-2xl object-cover"
         />
@@ -64,9 +65,7 @@ const BestSellersItems = ({
 
       <div className="p-3 leading-6">
         <h4 className="font-bold uppercase">{name}</h4>
-
         <p className="text-[14px] font-normal text-gray-500">{description}</p>
-
         <p className="flex w-full items-center justify-between font-bold text-green-600">
           {currencyFormatter.toReal(price)}
           <span className={`text-[12px] ${currentStyle.text}`}>
@@ -85,9 +84,7 @@ export const BestSellers = () => {
     quantity: QUANTITY_BEST_SELLERS,
   });
 
-  if (!data || data.length === 0) return null;
-
-  if (isLoading || isError) {
+  if (isLoading) {
     return (
       <div className="w-full space-y-4 rounded-2xl bg-white p-5">
         <p className="flex items-center gap-2 font-bold">
@@ -100,6 +97,9 @@ export const BestSellers = () => {
       </div>
     );
   }
+
+  if (isError) return null;
+  if (!data || data.length === 0) return null;
 
   return (
     <div className="w-full space-y-4 rounded-2xl bg-white p-5">
@@ -114,6 +114,7 @@ export const BestSellers = () => {
           <BestSellersItems
             key={bestSeller.product.id}
             name={bestSeller.product.name}
+            imageUrl={bestSeller.product.imageUrl}
             description={bestSeller.product.description}
             price={bestSeller.product.price}
             sold={bestSeller.totalSold}
