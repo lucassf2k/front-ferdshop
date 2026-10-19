@@ -66,6 +66,14 @@ export const SignInPage = () => {
                 >
                   ENTRAR
                 </Button>
+
+                <div>
+                  <Link to="/">
+                    <p className="mt-4 text-center text-[14px] text-neutral-500">
+                      Voltar para início
+                    </p>
+                  </Link>
+                </div>
               </div>
             </div>
           </form>

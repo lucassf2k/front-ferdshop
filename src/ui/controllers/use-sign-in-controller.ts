@@ -4,11 +4,12 @@ import { signInSchema, type SignInSchema } from '@/schemas/sign-in';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 
 export const useSignInController = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const form = useForm({
     resolver: zodResolver(signInSchema),
@@ -20,9 +21,13 @@ export const useSignInController = () => {
     mutate(data);
   };
 
+  const navigateToWithState = location.state?.from ?? '/';
+
   useEffect(() => {
-    if (isSuccess) navigate('/');
-  }, [isSuccess]);
+    if (isSuccess) {
+      navigate(navigateToWithState, { replace: true });
+    }
+  }, [isSuccess, navigateToWithState, navigate]);
 
   useEffect(() => {
     if (data?.code) {

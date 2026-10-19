@@ -1,3 +1,4 @@
+import { queries } from '@/constants/queries';
 import type { OrganizationModel } from '@/domain/model/organization';
 import { useUpsertOrganizationMutation } from '@/hooks/mutations/use-upsert-organization-mutation';
 import { useGetOrganizationQuery } from '@/hooks/queries/use-get-organization-query';
@@ -8,6 +9,7 @@ import { DialogForm } from '@/ui/components/custom-dialog/dialog-form';
 import { BaseInput } from '@/ui/components/form/input';
 import { mask } from '@/ui/lib/mask';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import {
   Controller,
@@ -63,6 +65,8 @@ const mapOrganizationToForm = (organization: OrganizationModel): FormData => ({
 });
 
 export const RegisterOrganizationDialog = () => {
+  const queryClient = useQueryClient();
+
   const { data: organizationData, isLoading: isOrganizationLoading } =
     useGetOrganizationQuery();
 
@@ -120,18 +124,28 @@ export const RegisterOrganizationDialog = () => {
   });
 
   const handleUpsertOrganization: SubmitHandler<FormData> = (data) => {
-    mutate({
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      address: data.address,
-      city: data.city,
-      state: data.state,
-      whatsapp: data.whatsapp,
-      instagram: data.instagram,
-      latitude: data.latitude,
-      longitude: data.longitude,
-    });
+    mutate(
+      {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        whatsapp: data.whatsapp,
+        instagram: data.instagram,
+        latitude: data.latitude,
+        longitude: data.longitude,
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: queries.organizationKeys.all,
+          });
+          reset(DEFAULT_VALUES);
+        },
+      },
+    );
   };
 
   const isEditing = Boolean(organizationData);
@@ -150,6 +164,7 @@ export const RegisterOrganizationDialog = () => {
     <CustomActionDialogWrapper
       title={isEditing ? 'Atualizar organização' : 'Criar organização'}
       dialogTitle="Organização"
+      variant="create"
     >
       {!canShowForm ? (
         <div className="flex flex-col gap-4">

@@ -1,11 +1,19 @@
-import { HomeIcon, InfoIcon, ShoppingCartIcon, UserIcon } from 'lucide-react';
+import {
+  HomeIcon,
+  InfoIcon,
+  LayoutDashboard,
+  ShoppingCartIcon,
+  UserIcon,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { MenuBarItem } from '@/ui/components/menu-bar/components/menu-bar-item';
 import { useCartTotalItems } from '@/stores/cart';
+import { useAuth } from '@/hooks/auth/use-auth';
 
 export const MenuBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const totalItemsInCart = useCartTotalItems();
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,8 +41,15 @@ export const MenuBar = () => {
           to="/carrinho"
           info={totalItemsInCart}
         />
-        <MenuBarItem label="Informações" Icon={InfoIcon} to="/info" />
-        <MenuBarItem label="Conta" Icon={UserIcon} to="/contact" />
+        <MenuBarItem label="Informações" Icon={InfoIcon} to="#" />
+        <MenuBarItem label="Conta" Icon={UserIcon} to="#" />
+        {user && (
+          <MenuBarItem
+            label="Dashboard"
+            Icon={LayoutDashboard}
+            to="/dashboard"
+          />
+        )}
       </nav>
     </div>
   );

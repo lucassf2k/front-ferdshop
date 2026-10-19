@@ -5,6 +5,7 @@ import { FaAngleRight } from 'react-icons/fa';
 import { IoBag, IoBagOutline } from 'react-icons/io5';
 import { ShoppingCartItem } from './shopping-cart-item';
 import { currencyFormatter } from '@/services/format-currency';
+import { Link } from 'react-router';
 
 export const ShoppingCart = () => {
   const cart = useCartItems();
@@ -61,11 +62,24 @@ export const ShoppingCart = () => {
         )}
 
         <div className="flex w-full px-8">
-          <Button className="h-13.5 w-full cursor-pointer rounded-2xl bg-amber-500 text-[16px] font-bold transition-colors duration-500 hover:bg-amber-400">
-            Finalizar Pedido
-            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100/20">
-              <FaAngleRight />
-            </span>
+          <Button
+            className="h-13.5 w-full cursor-pointer rounded-2xl bg-amber-500 text-[16px] font-bold transition-colors duration-500 hover:bg-amber-400"
+            asChild={hasItems}
+            disabled={!hasItems}
+          >
+            {hasItems ? (
+              <Link to="/carrinho">
+                Finalizar Pedido
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100/20">
+                  <FaAngleRight />
+                </span>
+              </Link>
+            ) : (
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gray-100/20">
+                Adicione Items
+                <FaAngleRight />
+              </span>
+            )}
           </Button>
         </div>
       </div>

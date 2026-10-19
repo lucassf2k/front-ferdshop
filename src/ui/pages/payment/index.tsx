@@ -11,7 +11,7 @@ import { cn } from '@/ui/lib/utils';
 import { CarTaxiFrontIcon, HomeIcon } from 'lucide-react';
 import { FaLocationDot } from 'react-icons/fa6';
 import { IoIosArrowRoundBack } from 'react-icons/io';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { CartButton } from '@/ui/pages/cart/components/cart-button';
 import { CheckBoxWithLabel } from '@/ui/pages/payment/components/checkbox-with-label';
 import { PaymentCardWrapper } from '@/ui/pages/payment/components/payment-wrapper';
@@ -45,6 +45,8 @@ import {
   paymentKeyToAppUser,
 } from './mappers';
 import { useCreateOrderMutation } from '@/hooks/mutations/use-create-order-mutation';
+import { useEffect } from 'react';
+import { useAuth } from '@/hooks/auth/use-auth';
 
 export const PaymentPage = () => {
   const {
@@ -72,6 +74,8 @@ export const PaymentPage = () => {
   const address = watch('address');
   const needChange = watch('needChange');
   const withoutNumber = watch('withoutNumber');
+  const navigate = useNavigate();
+  const { isAuthenticated, isFetching } = useAuth();
 
   const handleToggleDeliveryOption = (optionId: DeliveryOptionsIds) => {
     return () => {
@@ -114,12 +118,22 @@ export const PaymentPage = () => {
     }
     const newOrder = paymentFormToCreateOrderInput(data, orderItems);
     createOrderMutate(newOrder);
-    console.log(newOrder);
   };
 
   const isCashSelected = selectedPayment === PaymentMethodEnum.CASH;
   const isDeliverySelected = deliverySelected === DeliveryOptionEnum.DELIVERY;
   const isOnlineSelected = selectedPayment === PaymentMethodEnum.ONLINE;
+
+  useEffect(() => {
+    if (isAuthenticated || isFetching) return;
+    if (!isAuthenticated) {
+      navigate('/login', {
+        state: {
+          from: '/pagamento',
+        },
+      });
+    }
+  }, [isAuthenticated, isFetching, navigate]);
 
   return (
     <form

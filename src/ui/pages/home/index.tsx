@@ -10,6 +10,7 @@ import { AppPagination } from '@/ui/components/app-pagination';
 import { usePaginationMeta } from '@/hooks/use-pagination-meta';
 import { getProductsFiltersState } from './helpers/getProductsFilters';
 import { useState } from 'react';
+import bannerImage from '@/ui/assets/banner.jpeg';
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_PER_PAGE = 10;
@@ -68,12 +69,14 @@ export const HomePage = () => {
   return (
     <>
       {/* IMAGE DE FUNDO */}
-      <div className="h-80 w-full min-w-120 bg-red-500">
-        <div className="pointer-events-none h-full w-full bg-linear-to-b from-black/0 via-black/40 to-black/90" />
-      </div>
+      <img
+        src={bannerImage}
+        alt="Imagem de fundo"
+        className="h-full w-screen"
+      />
 
       {/* CONTEÚDO PRINCIPAL */}
-      <div className="-mt-6 flex w-full min-w-120 flex-col items-center rounded-t-[1.8rem] bg-neutral-200 p-8">
+      <div className="-mt-6 flex w-full min-w-120 flex-col items-center rounded-t-[1.8rem] bg-slate-200 p-8">
         <div className="w-[90%]">
           {/* BANNER INFO ORGANIZATION */}
           <BannerInfoOrganization />

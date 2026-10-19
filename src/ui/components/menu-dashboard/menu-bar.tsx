@@ -1,20 +1,26 @@
-import { HomeIcon, LogOut, LucideUsersRound } from 'lucide-react';
+import {
+  HomeIcon,
+  LogOut,
+  LucideUsersRound,
+  Building,
+  ShoppingCart,
+  Tags,
+} from 'lucide-react';
 import { DashboardMenuBarItem } from '@/ui/components/menu-dashboard/menu-bar-item';
 import { Button } from '../base-button';
 import { useLogOut } from '@/hooks/auth/use-logout';
-import { MdOutlineCategory } from 'react-icons/md';
 import { FiPackage } from 'react-icons/fi';
 
 export const DashboardMenuBar = () => {
   const { logOut } = useLogOut();
 
   return (
-    <div className="flex h-112 w-full flex-col items-center justify-between gap-5 rounded-br-4xl border border-amber-500 bg-zinc-50 py-4">
-      <div>
+    <div className="flex h-112 w-full flex-col items-center justify-between gap-5 rounded-br-4xl border border-amber-500 bg-slate-50 py-4">
+      <div className="space-y-2">
         <DashboardMenuBarItem title="Menu" Icon={HomeIcon} to="/" />
         <DashboardMenuBarItem
           title="Categorias"
-          Icon={MdOutlineCategory}
+          Icon={Tags}
           to="/dashboard/categorias"
         />
         <DashboardMenuBarItem
@@ -26,8 +32,17 @@ export const DashboardMenuBar = () => {
           title="Produtos"
           Icon={FiPackage}
           to="/dashboard/produtos"
+        />{' '}
+        <DashboardMenuBarItem
+          title="Pedidos"
+          Icon={ShoppingCart}
+          to="/dashboard/pedidos"
         />
-        <DashboardMenuBarItem title="Settings" Icon={HomeIcon} to="/settings" />
+        <DashboardMenuBarItem
+          title="Organização"
+          Icon={Building}
+          to="/dashboard/organizacao"
+        />
       </div>
 
       <Button

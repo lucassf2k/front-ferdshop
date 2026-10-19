@@ -14,6 +14,10 @@ import {
   PAYMENT_OPTION_CONFIG,
   PAYMENT_STATUS_CONFIG,
 } from '@/constants/order';
+import { UpdateOrderStatus } from '../components/update-order-status';
+import { UpdateDeliveryOption } from '../components/update-delivery-option';
+import { UpdatePaymentMethod } from '../components/update-payment-method';
+import { OptionalValue } from '@/ui/components/optional-value';
 
 type URLParams = {
   orderId: string;
@@ -112,21 +116,30 @@ export const DashboardOrderDetailsPage = () => {
               value={order.status}
               config={PAYMENT_STATUS_CONFIG}
             />
+
+            <UpdateOrderStatus orderId={order.id} />
+
             <div className="mt-3 space-y-3 text-gray-600">
               <div className="flex items-center justify-between">
                 <p>forma de pagamento</p>
-                <OrderStatusBadge
-                  value={order.payment?.method ?? 'CASH'}
-                  config={PAYMENT_OPTION_CONFIG}
-                />
+                <div className="flex items-center gap-2">
+                  <OrderStatusBadge
+                    value={order.payment?.method ?? 'CASH'}
+                    config={PAYMENT_OPTION_CONFIG}
+                  />
+                  <UpdatePaymentMethod orderId={order.id} />
+                </div>
               </div>
 
               <div className="flex items-center justify-between">
                 <p>forma de entrega</p>
-                <OrderStatusBadge
-                  value={order.deliveryOption!}
-                  config={DELIVERY_OPTION_CONFIG}
-                />
+                <div className="flex items-center gap-2">
+                  <OrderStatusBadge
+                    value={order.deliveryOption!}
+                    config={DELIVERY_OPTION_CONFIG}
+                  />
+                  <UpdateDeliveryOption orderId={order.id} />
+                </div>
               </div>
             </div>
 
@@ -146,7 +159,7 @@ export const DashboardOrderDetailsPage = () => {
           </CardWithAnimate>
 
           <CardWithAnimate title="Timeline do pedido">
-            <p>OLA</p>
+            <p className="text-gray-500">Sem timeline</p>
           </CardWithAnimate>
         </div>
 
@@ -187,13 +200,18 @@ export const DashboardOrderDetailsPage = () => {
               {order.deliveryAddress ? (
                 <>
                   <p className="text-gray-600">
-                    Endereço: {order.deliveryAddress}
+                    Endereço: <OptionalValue value={order.deliveryAddress} />
                   </p>
-                  <p className="text-gray-600"> N°: {order.addressNumber}</p>
                   <p className="text-gray-600">
-                    Complemento: {order.complement}
+                    {' '}
+                    N°: <OptionalValue value={order.addressNumber} />
                   </p>
-                  <p className="text-gray-600">Referência: {order.reference}</p>
+                  <p className="text-gray-600">
+                    Complemento: <OptionalValue value={order.complement} />
+                  </p>
+                  <p className="text-gray-600">
+                    Referência: <OptionalValue value={order.reference} />
+                  </p>
                   <a href="#" className="text-blue-500">
                     Ver no mapa
                   </a>

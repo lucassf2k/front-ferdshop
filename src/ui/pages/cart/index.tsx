@@ -4,10 +4,12 @@ import { CartButton } from './components/cart-button';
 import { ShoppingCartHeader } from './components/cart-header';
 import { CartItem } from './components/cart-item';
 import { EmptyCart } from './components/empty-cart';
+import { useNavigate } from 'react-router';
 
 export const CartPage = () => {
   const cart = useCartItems();
   const totalToPay = useCartTotalPrice();
+  const navigate = useNavigate();
 
   const hasItems = cart.length > 0;
 
@@ -37,7 +39,11 @@ export const CartPage = () => {
       {hasItems && (
         <div className="fixed right-0 bottom-0 left-0 border-t bg-white/90 p-5 backdrop-blur-md">
           <div className="mx-auto w-full max-w-2xl">
-            <CartButton total={totalToPay} text="Finalizar pedido" />
+            <CartButton
+              total={totalToPay}
+              text="Finalizar pedido"
+              onClick={() => navigate('/pagamento')}
+            />
           </div>
         </div>
       )}
