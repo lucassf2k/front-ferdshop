@@ -6,6 +6,8 @@ import { DashboardProductsPage } from '@/ui/pages/dashboard/products';
 import { DashboardOrdersPage } from '@/ui/pages/dashboard/orders';
 import { DashboardCategoriesPage } from '@/ui/pages/dashboard/categorias';
 import { DashboardOrderDetailsPage } from '@/ui/pages/dashboard/orders/details';
+import { DashboardOrganizationPage } from '@/ui/pages/dashboard/organization';
+import { DashboardHomePage } from '@/ui/pages/dashboard';
 
 export const dashboardRoutes: RouteObject = {
   path: 'dashboard',
@@ -14,6 +16,7 @@ export const dashboardRoutes: RouteObject = {
     {
       element: <RootDashboardLayout />,
       children: [
+        { index: true, element: <DashboardHomePage /> },
         { path: 'produtos', element: <DashboardProductsPage /> },
         { path: 'usuarios', element: <DashboardUsersPage /> },
         {
@@ -25,6 +28,7 @@ export const dashboardRoutes: RouteObject = {
           element: <DashboardOrderDetailsPage />,
         },
         { path: 'categorias', element: <DashboardCategoriesPage /> },
+        { path: 'organizacao', element: <DashboardOrganizationPage /> },
       ],
     },
   ],

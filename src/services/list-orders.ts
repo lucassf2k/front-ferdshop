@@ -18,6 +18,5 @@ export const listOrdersService: ListOrders = async ({ page, perPage }) => {
       },
     },
   );
-  console.log(response);
   return unwrapResultBaseAPi(response);
 };
