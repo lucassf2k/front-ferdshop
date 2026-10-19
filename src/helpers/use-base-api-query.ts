@@ -14,12 +14,14 @@ type UseBaseQueryParams<T> = {
   queryKey: QueryKey;
   service: Service<T>;
   options?: Omit<UseQueryOptions<T, AppError>, 'queryKey' | 'queryFn'>;
+  redirectOnUnauthorized?: boolean;
 };
 
 export const useBaseApiQuery = <T>({
   queryKey,
   service,
   options,
+  redirectOnUnauthorized = true,
 }: UseBaseQueryParams<T>) => {
   const navigate = useNavigate();
   const { showError } = useAppToastError();
@@ -49,11 +51,13 @@ export const useBaseApiQuery = <T>({
     const message = appError.toUserMessage(query.error);
     switch (errorType) {
       case 'ApiError': {
-        toast.info(message, { id: message });
-        if (
-          query.error.code === 'UNAUTHORIZED' ||
-          query.error.code === 'FORBIDDEN'
-        ) {
+        const isAuthorizedError = query.error.code === 'UNAUTHORIZED';
+        const isForbiddenError = query.error.code === 'FORBIDDEN';
+        if (!isAuthorizedError && isForbiddenError) {
+          toast.info(message, { id: message });
+        }
+        if (redirectOnUnauthorized && (isAuthorizedError || isForbiddenError)) {
+          toast.info(message, { id: message });
           navigate('/login');
         }
         break;
