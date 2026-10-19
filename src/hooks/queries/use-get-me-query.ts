@@ -7,5 +7,6 @@ export const useGetMeQuery = () => {
   return useBaseApiQuery({
     queryKey: queries.userKeys.me(),
     service: () => unwrapResultOrThrow(getMeService()),
+    redirectOnUnauthorized: false,
   });
 };
