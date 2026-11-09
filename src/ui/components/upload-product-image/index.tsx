@@ -64,6 +64,7 @@ export const UploadProductImageForm = ({
         isPending={isPending}
         isSuccess={isSuccess}
         isError={isError}
+        inputId="image"
       >
         <input
           id="image"
