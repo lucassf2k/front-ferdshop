@@ -5,4 +5,6 @@ export type BaseApiSchema<T> = {
   data: T;
 };
 
-export const api = new BaseFetch('http://localhost:3001/api/v1/');
+const FERSHOP_API_URL = import.meta.env.VITE_FERDSHOP_API_URL;
+
+export const api = new BaseFetch(`${FERSHOP_API_URL}/api/v1/`);

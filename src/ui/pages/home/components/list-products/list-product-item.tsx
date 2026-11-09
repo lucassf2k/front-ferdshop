@@ -12,7 +12,9 @@ interface ListProductItemProps {
   product: ProductModel;
 }
 
-const STATIC_URL = 'http://localhost:3001/files';
+const FERDSHOP_URL = import.meta.env.VITE_FERDSHOP_API_URL;
+
+const STATIC_URL = `${FERDSHOP_URL}/files`;
 
 export const ListProducItem = ({ product }: ListProductItemProps) => {
   const [isLoading, setIsLoading] = useState(false);
