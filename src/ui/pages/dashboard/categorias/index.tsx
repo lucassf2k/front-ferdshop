@@ -9,11 +9,7 @@ import { useMemo } from 'react';
 import { AppPagination } from '@/ui/components/app-pagination';
 
 export const DashboardCategoriesPage = () => {
-  const {
-    data: categories = [],
-    isError,
-    isLoading,
-  } = useQueryListCategories();
+  const { data: categories = [] } = useQueryListCategories();
   const [searchParams] = useSearchParams();
   const { page, perPage } = usePaginationParams(searchParams);
 

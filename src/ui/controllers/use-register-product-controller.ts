@@ -5,10 +5,9 @@ import {
   type RegisterProductSchema,
 } from '@/schemas/create-product';
 import { useQueryListCategories } from '@/hooks/queries/use-fetch-get-categories';
-import { useUploadProductImageMutation } from '@/hooks/mutations/use-upload-product-image-mutation';
 import { useCreateProductMutation } from '@/hooks/mutations/use-create-product-mutation';
 import type { CreateProductInput } from '@/domain/use-case/create-product';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { currencyFormatter } from '@/services/format-currency';
 import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';

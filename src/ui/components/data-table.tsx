@@ -13,7 +13,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/ui/components/ui/table';
-import { ScrollArea, ScrollBar } from '@/ui/components/ui/scroll-area';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,7 +30,7 @@ export const DataTable = <TData, TValue>({
   });
 
   return (
-    <div className="max-h-[500px] overflow-x-auto overflow-y-auto rounded-md border">
+    <div className="max-h-125 overflow-x-auto overflow-y-auto rounded-md border">
       <div className="min-h-max">
         <Table>
           <TableHeader className="sticky top-0 z-10 bg-white">

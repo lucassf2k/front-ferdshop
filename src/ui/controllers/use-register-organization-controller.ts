@@ -8,7 +8,7 @@ import {
 } from '@/schemas/upsert-organization';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { useForm, type SubmitHandler } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 const DEFAULT_VALUES: ZodRegisterOrganizationDialogSchema = {
   name: '',
@@ -53,8 +53,7 @@ export const useRegisterOrganizationController = () => {
     getCurrentLocation,
   } = useGetGeolocation();
 
-  const { mutate: upsertOrganization, isPending: isUpsertPending } =
-    useUpsertOrganizationMutation();
+  const { isPending: isUpsertPending } = useUpsertOrganizationMutation();
 
   useEffect(() => {
     if (!organizationData) {
@@ -73,16 +72,6 @@ export const useRegisterOrganizationController = () => {
     form.setValue('latitude', latitude);
     form.setValue('longitude', longitude);
   }, [latitude, longitude, form]);
-
-  const handleSubmit: SubmitHandler<ZodRegisterOrganizationDialogSchema> = (
-    data,
-  ) => {
-    upsertOrganization({
-      ...data,
-      latitude: data.latitude,
-      longitude: data.longitude,
-    });
-  };
 
   const isEditing = Boolean(organizationData);
 
@@ -106,8 +95,6 @@ export const useRegisterOrganizationController = () => {
     geolocationError,
     getCurrentLocation,
     isGeolocationLoading,
-
-    handleSubmit,
 
     currentLatitude: form.watch('latitude'),
     currentLongitude: form.watch('longitude'),

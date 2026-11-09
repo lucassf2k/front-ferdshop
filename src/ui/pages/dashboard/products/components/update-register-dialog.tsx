@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Controller, useForm, type SubmitHandler } from 'react-hook-form';
 import { currencyFormatter } from '@/services/format-currency';
 import { DialogForm } from '@/ui/components/custom-dialog/dialog-form';
@@ -7,9 +7,7 @@ import { CustomSelect } from '@/ui/components/form/select';
 import { CustomActionDialogWrapper } from '@/ui/components/custom-dialog';
 import { useQueryListCategories } from '@/hooks/queries/use-fetch-get-categories';
 import { Button } from '@/ui/components/base-button';
-import { UploadProductImageForm } from '@/ui/components/upload-product-image';
 import { LoadFile } from '@/ui/components/load-file.tsx';
-import { useUploadProductImageMutation } from '@/hooks/mutations/use-upload-product-image-mutation';
 import { useUpdateProductImageMutation } from '@/hooks/mutations/use-update-product-image-mutation';
 import { useUpdateProductMutation } from '@/hooks/mutations/use-update-product-mutation';
 import { toast } from 'sonner';
@@ -64,8 +62,7 @@ export const UpdateProductDialog = ({ product }: UpdateProductDialogProps) => {
     mutate: updateProductImageMutate,
     isPending: isPendingUpdatingProductImage,
   } = useUpdateProductImageMutation();
-  const { mutate: updateProductMutate, isPending: isPendingUpdateProduct } =
-    useUpdateProductMutation();
+  const { mutate: updateProductMutate } = useUpdateProductMutation();
 
   const handleCloseDialog = (isOpen: boolean) => {
     if (isOpen) {

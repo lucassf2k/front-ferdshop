@@ -1,6 +1,5 @@
 import type { ProductModel } from '@/domain/model/product';
 import { ListProductItemSkeleton } from '@/ui/components/skeletons/list-products-skeleton';
-import { Spinner } from '@/ui/components/ui/spinner';
 import { ListProducItem } from '@/ui/pages/home/components/list-products/list-product-item';
 
 interface ListProductsProps {

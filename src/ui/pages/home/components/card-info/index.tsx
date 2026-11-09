@@ -8,26 +8,13 @@ import { CardInfoTitle } from './components/card-info-title';
 import { CardHoursInfo } from './components/card-hours-info';
 import { PaymentOptionsInfo } from './components/oayment-options-info';
 import { useGetOrganizationQuery } from '@/hooks/queries/use-get-organization-query';
-import { useEffect } from 'react';
 
 interface Props {
   trigger: React.ReactElement;
 }
 
-const HOURS_DATA = [
-  { day: 'Segunda', hour: '08:00 - 17:30', isClosed: false },
-  { day: 'Terça', hour: '08:00 - 17:30' },
-  { day: 'Quarta', hour: '08:00 - 17:30' },
-  { day: 'Quinta', hour: '08:00 - 17:30' },
-  { day: 'Sexta', hour: '08:00 - 17:30' },
-  { day: 'Sábado', hour: '08:00 - 15:30' },
-];
-
 export const CardInfo = ({ trigger }: Props) => {
-  const latitude = -5.568462;
-  const longitude = -37.285004;
-
-  const { data: organizationData, isPending } = useGetOrganizationQuery();
+  const { data: organizationData } = useGetOrganizationQuery();
 
   const organization = organizationData ? organizationData : null;
 
