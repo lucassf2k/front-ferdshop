@@ -6,6 +6,7 @@ import { usePaginationMeta } from '@/hooks/use-pagination-meta';
 import { useListOrdersQuery } from '@/hooks/queries/use-list-orders-query';
 import { AppPagination } from '@/ui/components/app-pagination';
 import { DataTableSkeleton } from '@/ui/components/skeletons/data-table-skeleton';
+import { WhatsAppMessageForm } from '../components/whatsapp-message-form';
 
 export const DashboardOrdersPage = () => {
   const [searchParams] = useSearchParams();
@@ -33,13 +34,18 @@ export const DashboardOrdersPage = () => {
   const orders = hasOrders ? ordersData.orders : [];
 
   return (
-    <TableWrapper title="Pedidos">
-      {isOrdersPending ? (
-        <DataTableSkeleton />
-      ) : (
-        <OrdersTable orders={orders} />
-      )}
-      <AppPagination totalPages={totalPages} />
-    </TableWrapper>
+    <>
+      <TableWrapper title="Pedidos">
+        {isOrdersPending ? (
+          <DataTableSkeleton />
+        ) : (
+          <OrdersTable orders={orders} />
+        )}
+        <AppPagination totalPages={totalPages} />
+      </TableWrapper>
+      <div className="m-auto mt-3 w-[90%] border-t">
+        <WhatsAppMessageForm />
+      </div>
+    </>
   );
 };
