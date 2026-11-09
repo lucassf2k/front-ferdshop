@@ -1,5 +1,6 @@
 import { queries } from '@/constants/queries';
 import type { OrganizationModel } from '@/domain/model/organization';
+import { PaymentMethodEnum } from '@/domain/use-case/create-order';
 import { useUpsertOrganizationMutation } from '@/hooks/mutations/use-upsert-organization-mutation';
 import { useGetOrganizationQuery } from '@/hooks/queries/use-get-organization-query';
 import { useGetGeolocation } from '@/hooks/use-get-geolocation';
@@ -7,6 +8,7 @@ import { Button } from '@/ui/components/base-button';
 import { CustomActionDialogWrapper } from '@/ui/components/custom-dialog';
 import { DialogForm } from '@/ui/components/custom-dialog/dialog-form';
 import { BaseInput } from '@/ui/components/form/input';
+import { Label } from '@/ui/components/ui/label';
 import { mask } from '@/ui/lib/mask';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQueryClient } from '@tanstack/react-query';
@@ -18,6 +20,44 @@ import {
   type SubmitHandler,
 } from 'react-hook-form';
 import z from 'zod';
+import { CheckBoxWithLabel } from '../../payment/components/checkbox-with-label';
+
+const WEEK_DAYS: Array<Readonly<{ label: string; value: string }>> = [
+  {
+    label: 'Segunda-feira',
+    value: 'MONDAY',
+  },
+  {
+    label: 'Terca-feira',
+    value: 'TUESDAY',
+  },
+  {
+    label: 'Quarta-feira',
+    value: 'WEDNESDAY',
+  },
+  {
+    label: 'Quinta-feira',
+    value: 'THURSDAY',
+  },
+  {
+    label: 'Sexta-feira',
+    value: 'FRIDAY',
+  },
+  {
+    label: 'Sábado',
+    value: 'SATURDAY',
+  },
+  {
+    label: 'Domingo',
+    value: 'SUNDAY',
+  },
+] as const;
+
+const zodBusinessHoursSchema = z.object({
+  day: z.enum(WEEK_DAYS.map((day) => day.value)),
+  hour: z.string().min(1, { error: 'Horário é obrigatório' }),
+  isClosed: z.boolean(),
+});
 
 const zodRegisterOrganizationDialogSchema = z.object({
   name: z.string().min(1, { error: 'Nome é obrigatório' }),
@@ -34,6 +74,12 @@ const zodRegisterOrganizationDialogSchema = z.object({
   instagram: z.string().min(1, {
     error: 'Instagram é obrigatório',
   }),
+  paymentMethods: z.array(
+    z.enum(PaymentMethodEnum, {
+      error: 'Metodos de pagamento é obrigatório',
+    }),
+  ),
+  businessHours: z.array(zodBusinessHoursSchema),
 });
 
 type FormData = z.infer<typeof zodRegisterOrganizationDialogSchema>;
@@ -49,6 +95,12 @@ const DEFAULT_VALUES: FormData = {
   state: '',
   whatsapp: '',
   instagram: '',
+  paymentMethods: [],
+  businessHours: WEEK_DAYS.map(({ value }) => ({
+    day: value,
+    hour: '7h00 - 18h00',
+    isClosed: false,
+  })),
 };
 
 const mapOrganizationToForm = (organization: OrganizationModel): FormData => ({
@@ -62,6 +114,17 @@ const mapOrganizationToForm = (organization: OrganizationModel): FormData => ({
   state: organization.state,
   whatsapp: organization.whatsapp,
   instagram: organization.instagram,
+  paymentMethods: organization.paymentMethods,
+  businessHours: WEEK_DAYS.map(({ value }) => {
+    const businessHour = organization.businessHours?.find(
+      (item) => item.day === value,
+    );
+    return {
+      day: value,
+      hour: businessHour?.hour ?? '7h00 - 18h00',
+      isClosed: businessHour?.isClosed ?? false,
+    };
+  }),
 });
 
 export const RegisterOrganizationDialog = () => {
@@ -122,30 +185,36 @@ export const RegisterOrganizationDialog = () => {
     control,
     name: ['latitude', 'longitude'],
   });
+  const paymentMethods = useWatch({ control, name: 'paymentMethods' });
+  const businessHours = useWatch({ control, name: 'businessHours' });
+
+  const handleTogglePaymentMethod = (method: PaymentMethodEnum) => {
+    return () => {
+      const isSelected = paymentMethods.includes(method);
+      const updatePaymentMethods = isSelected
+        ? paymentMethods.filter((item) => item !== method)
+        : [...paymentMethods, method];
+      setValue('paymentMethods', updatePaymentMethods, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+    };
+  };
 
   const handleUpsertOrganization: SubmitHandler<FormData> = (data) => {
-    mutate(
-      {
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        address: data.address,
-        city: data.city,
-        state: data.state,
-        whatsapp: data.whatsapp,
-        instagram: data.instagram,
-        latitude: data.latitude,
-        longitude: data.longitude,
+    // const notNow = true;
+    // if (notNow) {
+    //   console.log(data);
+    //   return;
+    // }
+    mutate(data, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: queries.organizationKeys.all,
+        });
+        reset(DEFAULT_VALUES);
       },
-      {
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: queries.organizationKeys.all,
-          });
-          reset(DEFAULT_VALUES);
-        },
-      },
-    );
+    });
   };
 
   const isEditing = Boolean(organizationData);
@@ -295,6 +364,82 @@ export const RegisterOrganizationDialog = () => {
             disabled={isFormLoading}
             {...register('instagram')}
           />
+
+          <Label className="text-base">Formas de pagamento</Label>
+          <div className="flex flex-wrap gap-2">
+            {Object.values(PaymentMethodEnum).map((method) => {
+              const isSelected = paymentMethods.includes(method);
+              return (
+                <Button
+                  key={method}
+                  type="button"
+                  variant={isSelected ? 'default' : 'outline'}
+                  onClick={handleTogglePaymentMethod(method)}
+                  disabled={isFormLoading}
+                  className={`cursor-pointer hover:bg-green-500 hover:text-white ${isSelected ? 'bg-green-500' : ''}`}
+                >
+                  {method}
+                </Button>
+              );
+            })}
+          </div>
+          <p className="text-sm text-gray-500">
+            OBS.: "PIX" é o único método de pagamento oferecido diretamente pelo
+            site em questão. Todos os outros metódos de uso diretamente no local
+            fisíco
+          </p>
+
+          <div className="mt-4">
+            <Label className="text-base">Horários de funcionamento</Label>
+            {WEEK_DAYS.map((day, index) => {
+              return (
+                <div key={`${day.value}-${index}`} className="mt-4">
+                  <BaseInput
+                    label={day.label}
+                    placeholder="Ex.: 08:00 - 18:00"
+                    error={errors.businessHours?.[index]?.hour?.message}
+                    disabled={isFormLoading || businessHours[index].isClosed}
+                    {...register(`businessHours.${index}.hour`)}
+                  />
+                  <div className="mt-2">
+                    <Controller
+                      name={`businessHours.${index}.isClosed`}
+                      control={control}
+                      render={({ field }) => (
+                        <CheckBoxWithLabel
+                          label="Fechado"
+                          labelClassName="text-[16px] text-gray-500"
+                          checked={field.value}
+                          onCheckedChange={(checked) => {
+                            field.onChange(checked === true);
+                            if (businessHours[index].isClosed) {
+                              setValue(
+                                `businessHours.${index}.hour`,
+                                '7h00 - 18h00',
+                                {
+                                  shouldValidate: true,
+                                  shouldDirty: true,
+                                },
+                              );
+                              return;
+                            }
+                            setValue(
+                              `businessHours.${index}.hour`,
+                              '00:00 - 00:00',
+                              {
+                                shouldValidate: true,
+                                shouldDirty: true,
+                              },
+                            );
+                          }}
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </DialogForm>
       )}
     </CustomActionDialogWrapper>

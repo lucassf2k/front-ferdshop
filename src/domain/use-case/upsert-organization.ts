@@ -1,6 +1,10 @@
 import type { AppError } from '@/domain/shared/api-error';
 import type { Result } from '@/domain/shared/result';
-import type { OrganizationModel } from '@/domain/model/organization';
+import type {
+  BusinessHours,
+  OrganizationModel,
+} from '@/domain/model/organization';
+import type { PaymentMethodEnum } from './create-order';
 
 export type UpsertOrganizationInput = {
   name: string;
@@ -13,6 +17,8 @@ export type UpsertOrganizationInput = {
   state: string;
   whatsapp: string;
   instagram: string;
+  paymentMethods: PaymentMethodEnum[];
+  businessHours: BusinessHours[];
 };
 
 export type UpsertOrganizationOutput = OrganizationModel;

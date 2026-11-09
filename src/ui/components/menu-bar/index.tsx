@@ -6,9 +6,13 @@ import {
   UserIcon,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { MenuBarItem } from '@/ui/components/menu-bar/components/menu-bar-item';
+import {
+  MenuBarButton,
+  MenuBarItem,
+} from '@/ui/components/menu-bar/components/menu-bar-item';
 import { useCartTotalItems } from '@/stores/cart';
 import { useAuth } from '@/hooks/auth/use-auth';
+import { CardInfo } from '@/ui/pages/home/components/card-info';
 
 export const MenuBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,7 +27,7 @@ export const MenuBar = () => {
     return () => {
       document.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [setIsScrolled]);
 
   return (
     <div
@@ -33,7 +37,7 @@ export const MenuBar = () => {
           : 'w-screen'
       }`}
     >
-      <nav className="flex h-full w-96 items-center justify-around">
+      <nav className="flex h-full w-120 items-center justify-around">
         <MenuBarItem label="Home" Icon={HomeIcon} to="/" />
         <MenuBarItem
           label="Carrinho"
@@ -41,7 +45,9 @@ export const MenuBar = () => {
           to="/carrinho"
           info={totalItemsInCart}
         />
-        <MenuBarItem label="Informações" Icon={InfoIcon} to="#" />
+        <CardInfo
+          trigger={<MenuBarButton label="Informações" Icon={InfoIcon} />}
+        />
         <MenuBarItem label="Conta" Icon={UserIcon} to="#" />
         {user && (
           <MenuBarItem

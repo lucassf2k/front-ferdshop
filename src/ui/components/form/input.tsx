@@ -41,7 +41,7 @@ export const BaseInput = ({
       )}
       <Input
         className={cn(
-          'flex h-10.5 items-center justify-center rounded-b-md border-3 border-blue-500 focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/50',
+          'flex h-10.5 items-center justify-center rounded-md border-3 border-blue-500 focus-visible:border-blue-500 focus-visible:ring-2 focus-visible:ring-blue-500/50',
           className,
         )}
         {...props}

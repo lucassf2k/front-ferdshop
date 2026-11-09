@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import type { LucideIcon } from 'lucide-react';
+import { Button } from '@/ui/components/ui/button';
 
 type Props = {
   label: string;
@@ -26,5 +27,28 @@ export const MenuBarItem = ({ label, Icon, to, info }: Props) => {
 
       <p className="text-[11px] tracking-wider max-[380px]:hidden">{label}</p>
     </Link>
+  );
+};
+
+interface MenuBarButtonProps {
+  label: string;
+  Icon: LucideIcon;
+  onClick?: () => void;
+}
+
+export const MenuBarButton = ({ label, Icon, onClick }: MenuBarButtonProps) => {
+  return (
+    <Button
+      type="button"
+      variant="ghost"
+      onClick={onClick}
+      className="relative flex h-full w-[8.4rem] flex-col items-center justify-center gap-4 rounded-none p-2 font-bold text-gray-100 uppercase hover:border-b-4 hover:bg-transparent hover:text-white"
+    >
+      <Icon className="h-6! w-6!" />
+
+      <span className="text-[11px] tracking-wider max-[380px]:hidden">
+        {label}
+      </span>
+    </Button>
   );
 };
