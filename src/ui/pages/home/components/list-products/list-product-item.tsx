@@ -7,14 +7,13 @@ import { Button } from '@/ui/components/base-button';
 import emptyProductImage from '@/ui/assets/empty-product.png';
 import type { ProductModel } from '@/domain/model/product';
 import { useAddProductToCart } from '@/stores/cart';
+import { environment } from '@/constants/environment';
 
 interface ListProductItemProps {
   product: ProductModel;
 }
 
-const FERDSHOP_URL = import.meta.env.VITE_FERDSHOP_API_URL;
-
-const STATIC_URL = `${FERDSHOP_URL}/files`;
+const STATIC_URL = `${environment.ferdshopApiUrl}/files`;
 
 export const ListProducItem = ({ product }: ListProductItemProps) => {
   const [isLoading, setIsLoading] = useState(false);

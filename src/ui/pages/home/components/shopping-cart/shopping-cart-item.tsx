@@ -4,11 +4,11 @@ import { Button } from '@/ui/components/ui/button';
 import { currencyFormatter } from '@/services/format-currency';
 import type { CartProduct } from '@/stores/cart/cart-type';
 import { useRemoveProductFromCart } from '@/stores/cart';
+import { environment } from '@/constants/environment';
 
 interface Props {
   product: CartProduct;
 }
-
 export const ShoppingCartItem = ({ product }: Props) => {
   const isOnlyOne = product.quantity === 1;
   const removeProduct = useRemoveProductFromCart();
@@ -20,7 +20,7 @@ export const ShoppingCartItem = ({ product }: Props) => {
       {/* Product image */}
       <div className="h-24 w-24 overflow-hidden rounded-xl bg-zinc-100">
         <img
-          src={`http://localhost:3001/files/${product.imageUrl}`}
+          src={`${environment.ferdshopApiUrl}/files/${product.imageUrl}`}
           alt=""
           className="h-full w-full object-cover"
         />
