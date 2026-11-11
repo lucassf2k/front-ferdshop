@@ -1,8 +1,9 @@
 import {
+  Cuboid,
   HomeIcon,
-  InfoIcon,
   LayoutDashboard,
   ShoppingCartIcon,
+  SquareStack,
   UserIcon,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -13,6 +14,9 @@ import {
 import { useCartTotalItems } from '@/stores/cart';
 import { useAuth } from '@/hooks/auth/use-auth';
 import { CardInfo } from '@/ui/pages/home/components/card-info';
+import { OrganizationCardInfo } from './components/organization-card-info';
+import { CardInfoTitle } from '@/ui/pages/home/components/card-info/components/card-info-title';
+import { CustomLinkCardWithAnimation } from '../custom-link-with-animation';
 
 export const MenuBar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -45,10 +49,30 @@ export const MenuBar = () => {
           to="/carrinho"
           info={totalItemsInCart}
         />
-        <CardInfo
-          trigger={<MenuBarButton label="Informações" Icon={InfoIcon} />}
-        />
-        <MenuBarItem label="Conta" Icon={UserIcon} to="#" />
+        <OrganizationCardInfo />
+        <CardInfo trigger={<MenuBarButton label="Conta" Icon={UserIcon} />}>
+          <div className="flex w-full flex-col gap-2 p-6">
+            <CardInfoTitle text="Escolha sua conta" Icon={UserIcon} />
+            <div className="p-4">
+              <CustomLinkCardWithAnimation
+                to="/login"
+                label="Consumidor"
+                subLabel="Gerencia seu perfil de cliente"
+                Icon={UserIcon}
+                variant="green"
+              />
+            </div>
+            <CardInfoTitle text="Outros" Icon={Cuboid} />
+            <CustomLinkCardWithAnimation
+              to="/"
+              label="Meus pedidos"
+              subLabel="Veja seu histórico de pedidos"
+              Icon={SquareStack}
+              variant="black"
+            />
+          </div>
+        </CardInfo>
+
         {user && (
           <MenuBarItem
             label="Dashboard"
