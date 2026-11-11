@@ -5,6 +5,7 @@ import { currencyFormatter } from '@/services/format-currency';
 import type { CartProduct } from '@/stores/cart/cart-type';
 import { CiCircleInfo } from 'react-icons/ci';
 import { useAddProductToCart, useRemoveProductFromCart } from '@/stores/cart';
+import { environment } from '@/constants/environment';
 
 interface Props {
   product: CartProduct & {
@@ -25,7 +26,7 @@ export const CartItem = ({ product }: Props) => {
       {/* Product image */}
       <div className="h-20 w-20 overflow-hidden rounded-xl bg-zinc-100">
         <img
-          src={`http://localhost:3001/files/${product.imageUrl}`}
+          src={`${environment.ferdshopApiUrl}/files/${product.imageUrl}`}
           alt={product.name}
           className="h-full w-full object-cover"
         />
